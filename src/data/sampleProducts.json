@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Siyah Ayakkabı", "categoryId": 1, "gender": "kadin", "price": 250, "image": "/images/ayakkabi1.jpg" },
+  { "id": 2, "name": "Kırmızı Elbise", "categoryId": 3, "gender": "kadin", "price": 300, "image": "/images/elbise1.jpg" },
+  { "id": 3, "name": "Mavi Gömlek", "categoryId": 2, "gender": "erkek", "price": 200, "image": "/images/gomlek1.jpg" }
+]

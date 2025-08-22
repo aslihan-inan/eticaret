@@ -1,0 +1,8 @@
+[
+  { "id": 1, "name": "Ayakkabı", "gender": "kadin", "rating": 4.8, "image": "/images/ayakkabi.jpg" },
+  { "id": 2, "name": "Gömlek", "gender": "erkek", "rating": 4.7, "image": "/images/gomlek.jpg" },
+  { "id": 3, "name": "Elbise", "gender": "kadin", "rating": 4.9, "image": "/images/elbise.jpg" },
+  { "id": 4, "name": "Pantolon", "gender": "erkek", "rating": 4.6, "image": "/images/pantolon.jpg" },
+  { "id": 5, "name": "Çanta", "gender": "kadin", "rating": 4.5, "image": "/images/canta.jpg" },
+  { "id": 6, "name": "Saat", "gender": "erkek", "rating": 4.4, "image": "/images/saat.jpg" }
+]
