@@ -10,7 +10,7 @@ import Contact from "./Contact";
 import Pages from "./Pages";
 import About from "./About";
 import Signup from "./pages/signup";
-import Login from "./login";
+import Login from "./Login";
 import { checkToken } from "./redux/actions/authActions"; 
 import ShopPage from "./pages/ShopPage"; 
 
