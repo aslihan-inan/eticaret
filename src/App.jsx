@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import MainLayout from "./layout/MainLayout";
+import MainLayout from "./layout/MainLayout.jsx";
 import Home from "./Home";
 import Shop from "./Shop";
 import Detail from "./Detail";
