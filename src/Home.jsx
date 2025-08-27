@@ -4,7 +4,7 @@ import Ndark from './Ndark.jsx';
 import Nlight from './Nlight.jsx';
 import ProductGrid from './ProductGrid.jsx';
 import Logo from './Logo.jsx';
-import Best from '.best.jsx';
+import Best from '.Best.jsx';
 import FeaturedProducts from './FeaturedProducts.jsx';
 import BestServices from './BestServices.jsx';
 import Featured from './Featured.jsx';
