@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import MainLayout from "./layout/MainLayout.jsx";
 import Home from "./Home";
-import Shop from "./Shop";
+import Shop from "./Pages/Shop";
 import Detail from "./Detail";
 import Contact from "./Contact";
 import Pages from "./Pages";

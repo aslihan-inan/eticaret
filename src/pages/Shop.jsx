@@ -6,7 +6,8 @@ import {
   setSort,
   setPage,
 } from "../store/productSlice";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/ProductCard.jsx";
+
 
 export default function Shop() {
   const dispatch = useDispatch();
