@@ -28,7 +28,7 @@ export default function Nlight() {
   const otherMen = menCategories.filter(c => !topMen.includes(c));
 
   return (
-    <nav className="bg-white shadow">
+    <nav className=" bg-white ">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
 
         {/* Logo */}
@@ -42,7 +42,7 @@ export default function Nlight() {
           <li className="relative">
             <button
               onClick={() => setOpenShop(!openShop)}
-              className="flex items-center space-x-1 hover:text-blue-600"
+              className="c space-x-1 hover:text-blue-600"
             >
               <span>Shop</span>
               <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

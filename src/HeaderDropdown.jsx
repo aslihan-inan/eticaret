@@ -1,8 +1,8 @@
-// src/components/Header.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCategories } from '../redux/actions/categoryActions';
+
 
 export default function Header() {
   const dispatch = useDispatch();

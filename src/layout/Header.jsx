@@ -1,22 +1,164 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import Gravatar from "react-gravatar";
+// src/layout/Header.jsx
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { Menu, X, ShoppingCart, Search } from "lucide-react";
 
 export default function Header() {
-  // client slice'ta user yoksa hata vermemesi için default {}
-  const user = useSelector(state => state.client?.user || {});
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+  const history = useHistory();
+
+  const goToShop = () => history.push("/shop");
 
   return (
-    <header className="flex justify-between items-center p-4 bg-gray-100">
-      <h1>Commerce App</h1>
-      {user.email ? (
-        <div className="flex items-center gap-2">
-          <Gravatar email={user.email} size={40} default="retro" />
-          <span>{user.name || user.email}</span>
+    <header className="w-full">
+      {/* Dark Top Bar */}
+      <div className="bg-[#252B42] text-white text-sm">
+        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center px-4 py-2 gap-2">
+          <div className="flex gap-4 items-center">
+            <span>(225) 555-0118</span>
+            <span>michelle.rivera@example.com</span>
+          </div>
+          <div className="flex gap-4 items-center">
+            <span>Follow Us and get a chance to win 80% off</span>
+            <div className="flex gap-3">
+              <a href="#">FB</a>
+              <a href="#">IG</a>
+              <a href="#">TW</a>
+            </div>
+          </div>
         </div>
-      ) : (
-        <span>Not logged in</span>
-      )}
+      </div>
+
+      {/* Light Navigation Bar */}
+      <div className="bg-white border-b">
+        <div className="max-w-[1440px] mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
+            {/* Logo */}
+            <Link to="/" className="text-2xl font-bold text-[#252B42]">
+              Bandage
+            </Link>
+
+            {/* Desktop Menu */}
+            <nav className="hidden md:flex gap-6 items-center text-center">
+              <Link to="/">Home</Link>
+
+              {/* Shop Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => setShopOpen(true)}
+                onMouseLeave={() => setShopOpen(false)}
+              >
+                <button
+                  className="flex items-center gap-1"
+                  onClick={goToShop} // Tıklayınca /shop sayfasına gider
+                >
+                  Shop <span>▾</span>
+                </button>
+
+                {shopOpen && (
+                  <div className="absolute left-0 top-full mt-2 bg-white shadow-lg p-6 grid grid-cols-2 gap-8 min-w-[400px] z-50">
+                    {/* Kadın */}
+                    <div>
+                      <h4 className="font-semibold mb-3">Kadın</h4>
+                      <ul className="space-y-1">
+                        <li><Link to="/shop/kadin/bags">Bags</Link></li>
+                        <li><Link to="/shop/kadin/belts">Belts</Link></li>
+                        <li><Link to="/shop/kadin/cosmetics">Cosmetics</Link></li>
+                        <li><Link to="/shop/kadin/hats">Hats</Link></li>
+                      </ul>
+                    </div>
+
+                    {/* Erkek */}
+                    <div>
+                      <h4 className="font-semibold mb-3">Erkek</h4>
+                      <ul className="space-y-1">
+                        <li><Link to="/shop/erkek/bags">Bags</Link></li>
+                        <li><Link to="/shop/erkek/belts">Belts</Link></li>
+                        <li><Link to="/shop/erkek/cosmetics">Cosmetics</Link></li>
+                        <li><Link to="/shop/erkek/hats">Hats</Link></li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <Link to="/about">About</Link>
+              <Link to="/blog">Blog</Link>
+              <Link to="/contact">Contact</Link>
+              <Link to="/pages">Pages</Link>
+            </nav>
+
+            {/* Right Icons */}
+            <div className="hidden md:flex items-center gap-4">
+              <Link to="/login" className="text-[#23A6F0] font-semibold">
+                Login / Register
+              </Link>
+              <Search size={18} />
+              <ShoppingCart size={18} />
+            </div>
+
+            {/* Mobile Hamburger */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="md:hidden"
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {mobileOpen && (
+            <div className="flex flex-col gap-4 md:hidden pb-4">
+              <Link to="/">Home</Link>
+              <button
+                className="flex items-center gap-1"
+                onClick={() => setShopOpen(!shopOpen)}
+              >
+                Shop ▾
+              </button>
+
+              {shopOpen && (
+                <div className="pl-4 flex flex-col gap-4">
+                  {/* Kadın */}
+                  <div>
+                    <h4 className="font-semibold mb-2">Kadın</h4>
+                    <ul className="space-y-1">
+                      <li><Link to="/shop/kadin/bags">Bags</Link></li>
+                      <li><Link to="/shop/kadin/belts">Belts</Link></li>
+                      <li><Link to="/shop/kadin/cosmetics">Cosmetics</Link></li>
+                      <li><Link to="/shop/kadin/hats">Hats</Link></li>
+                    </ul>
+                  </div>
+
+                  {/* Erkek */}
+                  <div>
+                    <h4 className="font-semibold mb-2">Erkek</h4>
+                    <ul className="space-y-1">
+                      <li><Link to="/shop/erkek/bags">Bags</Link></li>
+                      <li><Link to="/shop/erkek/belts">Belts</Link></li>
+                      <li><Link to="/shop/erkek/cosmetics">Cosmetics</Link></li>
+                      <li><Link to="/shop/erkek/hats">Hats</Link></li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              <Link to="/about">About</Link>
+              <Link to="/blog">Blog</Link>
+              <Link to="/contact">Contact</Link>
+              <Link to="/pages">Pages</Link>
+              <Link to="/login" className="text-[#23A6F0] font-semibold">
+                Login / Register
+              </Link>
+              <div className="flex gap-4">
+                <Search size={18} />
+                <ShoppingCart size={18} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </header>
   );
 }
