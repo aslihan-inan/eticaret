@@ -12,6 +12,10 @@ import Signup from "./pages/signup";
 import Login from "./Login";
 import { checkToken } from "./redux/actions/authActions";
 
+
+
+
+
 export default function App() {
   const dispatch = useDispatch();
 
