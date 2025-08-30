@@ -37,33 +37,7 @@ const ShopSection = () => {
         ))}
       </div>
 
-      {/* Results and Filter */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center  gap-4 ">
-        <p className="text-gray-700">Showing all 12 results</p>
-
-        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <div className="flex items-center gap-2">
-            <span className="text-gray-700">Views:</span>
-            <div className="flex gap-1 flex-wrap">
-              {[...Array(3)].map((_, i) => (
-                <button key={i} className="px-2 py-1 border hover:bg-gray-100">
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-gray-700">Sort by:</span>
-            <select className="border p-1 rounded">
-              <option>Popularity ▼</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
-              <option>Newest</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      
 
       {/* Filter Button for Mobile */}
       <button className="md:hidden bg-gray-200 px-4 py-2 rounded mb-4 w-full">

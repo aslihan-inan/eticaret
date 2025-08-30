@@ -1,78 +1,97 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchProducts,
-  setFilter,
-  setSort,
-  setPage,
-} from "../store/productSlice";
-import ProductCard from "../components/ProductCard.jsx";
-
+// src/pages/Shop.jsx
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import ProductCard from "../components/ProductCard";
+import Logo from "../Logo";
+import ShopSection from "../ShopSection";
+import X from "../assets/work.jpg"; // görsel importu
+import FilterBar from "../FilterBar";
+import Pagination  from "../Pagination";
 
 export default function Shop() {
-  const dispatch = useDispatch();
-  const { products, loading, total, page, limit, filter, sort } = useSelector(
-    (state) => state.products
-  );
+  const { categoryId } = useParams();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("");
+  const [sort, setSort] = useState("");
 
-  // API çağrısı sayfa, filtre veya sort değişince
+  // Test için sabit ürünler
+  const testProducts = Array.from({ length: 12 }, (_, i) => ({
+    id: i + 1,
+    title: `Graphic Design ${i + 1}`,
+    department: "English Department",
+    originalPrice: 16.48,
+    discountedPrice: 6.48,
+    rating: Math.floor(Math.random() * 5) + 1,
+    imageUrl: X,
+  }));
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      // Eğer backend çalışıyorsa burayı açabilirsin:
+      /*
+      const params = new URLSearchParams();
+      if (categoryId) params.append("category", categoryId);
+      if (filter) params.append("filter", filter);
+      if (sort) params.append("sort", sort);
+
+      const res = await axios.get(`http://localhost:5000/products?${params.toString()}`);
+      setProducts(res.data.products || []);
+      */
+
+      // --- Test verisiyle filtreleme/sıralama ---
+      let filtered = [...testProducts];
+
+      // filtreleme
+      if (filter) {
+        filtered = filtered.filter((p) =>
+          p.title.toLowerCase().includes(filter.toLowerCase())
+        );
+      }
+
+      // sıralama
+      if (sort === "price:asc") filtered.sort((a, b) => a.discountedPrice - b.discountedPrice);
+      if (sort === "price:desc") filtered.sort((a, b) => b.discountedPrice - a.discountedPrice);
+      if (sort === "rating:asc") filtered.sort((a, b) => a.rating - b.rating);
+      if (sort === "rating:desc") filtered.sort((a, b) => b.rating - a.rating);
+
+      setProducts(filtered);
+    } catch (err) {
+      console.error("API error:", err.message);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    dispatch(fetchProducts({ limit, offset: (page - 1) * limit, filter, sort }));
-  }, [dispatch, page, filter, sort, limit]);
-
-  const totalPages = Math.ceil(total / limit);
+    fetchProducts();
+  }, [categoryId, filter, sort]);
 
   return (
-    <div className="p-4">
-      {/* Filtre ve Sort */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={filter}
-          onChange={(e) => dispatch(setFilter(e.target.value))}
-          className="border px-3 py-2 rounded w-full sm:w-auto"
-        />
-        <select
-          value={sort}
-          onChange={(e) => dispatch(setSort(e.target.value))}
-          className="border px-3 py-2 rounded w-full sm:w-auto"
-        >
-          <option value="">Sort By</option>
-          <option value="price:asc">Price Asc</option>
-          <option value="price:desc">Price Desc</option>
-          <option value="rating:asc">Rating Asc</option>
-          <option value="rating:desc">Rating Desc</option>
-        </select>
+    <section className="bg-white font-sans py-12 px-4 flex justify-center">
+      <div className="max-w-[1115px] w-full">
+        <ShopSection />
+        <div className="mt-[100px]">
+        <FilterBar />
+        </div>
+
+        {/* Ürünler */}
+        {loading ? (
+          <p className="text-center my-4">Yükleniyor...</p>
+        ) : products.length === 0 ? (
+          <p className="text-center my-4">Ürün bulunamadı.</p>
+        ) : (
+          <section className="max-w-[1440px] mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </section>
+        )}
+        < Pagination />
+        <Logo />
       </div>
-
-      {/* Ürünler */}
-      {loading ? (
-        <p className="text-center my-4">Yükleniyor...</p>
-      ) : (
-        <>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-center gap-2 mt-6">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-              <button
-                key={num}
-                onClick={() => dispatch(setPage(num))}
-                className={`px-3 py-1 rounded ${
-                  num === page ? "bg-blue-600 text-white" : "bg-gray-200"
-                }`}
-              >
-                {num}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
+    </section>
   );
 }
