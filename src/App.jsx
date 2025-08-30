@@ -56,5 +56,5 @@ export default function App() {
         <Route path="/login" render={() => <MainLayout><Login /></MainLayout>} />
       </Switch>
     </Router>
-  );
+  ); 
 }

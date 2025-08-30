@@ -6,9 +6,29 @@ import { Menu, X, ShoppingCart, Search } from "lucide-react";
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const history = useHistory();
 
   const goToShop = () => history.push("/shop");
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      // Arama terimiyle shop sayfasına yönlendir
+      history.push(`/shop?search=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm("");
+      setIsSearchOpen(false);
+    }
+  };
+
+  const handleSearchClick = () => {
+    setIsSearchOpen(!isSearchOpen);
+    if (isSearchOpen && searchTerm.trim()) {
+      history.push(`/shop?search=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm("");
+    }
+  };
 
   return (
     <header className="w-full">
@@ -51,7 +71,7 @@ export default function Header() {
               >
                 <button
                   className="flex items-center gap-1"
-                  onClick={goToShop} // Tıklayınca /shop sayfasına gider
+                  onClick={goToShop}
                 >
                   Shop <span>▾</span>
                 </button>
@@ -94,7 +114,38 @@ export default function Header() {
               <Link to="/login" className="text-[#23A6F0] font-semibold">
                 Login / Register
               </Link>
-              <Search size={18} />
+              
+              {/* Arama Bölümü */}
+              <div className="relative">
+                <button
+                  onClick={handleSearchClick}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <Search size={18} />
+                </button>
+                
+                {isSearchOpen && (
+                  <div className="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 min-w-[300px] z-50">
+                    <form onSubmit={handleSearchSubmit} className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Ürünlerde ara..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        autoFocus
+                      />
+                      <button
+                        type="submit"
+                        className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                      >
+                        Ara
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
+              
               <ShoppingCart size={18} />
             </div>
 
@@ -151,8 +202,27 @@ export default function Header() {
               <Link to="/login" className="text-[#23A6F0] font-semibold">
                 Login / Register
               </Link>
+              
+              {/* Mobile Arama */}
+              <div className="flex flex-col gap-2">
+                <form onSubmit={handleSearchSubmit} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Ürünlerde ara..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    type="submit"
+                    className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                  >
+                    Ara
+                  </button>
+                </form>
+              </div>
+              
               <div className="flex gap-4">
-                <Search size={18} />
                 <ShoppingCart size={18} />
               </div>
             </div>
