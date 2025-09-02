@@ -1,22 +1,30 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-export default function ProductCard({ product, gender, categoryName }) {
-  const navigate = useNavigate();
+export default function ProductCard({ product }) {
+  const history = useHistory();
 
   const handleClick = () => {
-    const slug = product.name.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/shop/${gender}/${categoryName}/${product.category_id}/${slug}/${product.id}`);
+    history.push(`/detail/${product.id}`);
   };
 
   return (
     <div
       onClick={handleClick}
-      className="cursor-pointer hover:shadow-lg transition-shadow p-4 border rounded"
+      className="cursor-pointer border rounded-lg shadow hover:shadow-lg transition"
     >
-      <img src={product.images[0]?.url} alt={product.name} className="w-full h-48 object-cover" />
-      <h3 className="mt-2 font-semibold">{product.name}</h3>
-      <p className="text-gray-600">${product.price}</p>
+      <img
+        src={product.imageUrl || product.images?.[0]}
+        alt={product.title}
+        className="w-full h-48 object-cover rounded-t-lg"
+      />
+      <div className="p-4">
+        <h3 className="font-semibold">{product.title}</h3>
+        {product.department && <p className="text-gray-500">{product.department}</p>}
+        <p className="text-blue-600 font-bold">
+          ${product.discountedPrice || product.price}
+        </p>
+      </div>
     </div>
   );
 }

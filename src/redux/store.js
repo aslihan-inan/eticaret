@@ -1,16 +1,13 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import thunk from "redux-thunk";
-import categoryReducer from "./reducers/categoryReducer";
+// src/redux/store.js
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "./slices/cartSlice";
 import productReducer from "./reducers/productReducer";
-
-const rootReducer = combineReducers({
-  category: categoryReducer,
-  product: productReducer
-});
+import categoryReducer from "./reducers/categoryReducer";
 
 export const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk)
+  reducer: {
+    cart: cartReducer,
+    product: productReducer,
+    category: categoryReducer,
+  },
 });
-
-export default store;

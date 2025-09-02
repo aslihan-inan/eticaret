@@ -1,6 +1,7 @@
+// src/App.jsx
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import MainLayout from "./layout/MainLayout.jsx";
 import Home from "./Home";
 import Shop from "./pages/Shop";
@@ -10,13 +11,11 @@ import Pages from "./Pages";
 import About from "./About";
 import Signup from "./pages/signup";
 import Login from "./Login";
+import CartTable from "./pages/CartTable"; // Cart sayfası
 import { checkToken } from "./redux/actions/authActions";
+import { store } from "./redux/store"; // Redux store
 
-
-
-
-
-export default function App() {
+function AppContent() {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        {/* Dinamik shop önce */}
+        {/* Dinamik shop (gender, category vs.) */}
         <Route
           path="/shop/:gender/:categoryName/:categoryId"
           render={(props) => (
@@ -36,7 +35,7 @@ export default function App() {
           )}
         />
 
-        {/* Sadece /shop */}
+        {/* Shop ana sayfa */}
         <Route
           exact
           path="/shop"
@@ -47,14 +46,88 @@ export default function App() {
           )}
         />
 
-        <Route exact path="/" render={() => <MainLayout><Home /></MainLayout>} />
-        <Route path="/detail/:id" render={(props) => <MainLayout><Detail {...props} /></MainLayout>} />
-        <Route path="/contact" render={() => <MainLayout><Contact /></MainLayout>} />
-        <Route path="/pages" render={() => <MainLayout><Pages /></MainLayout>} />
-        <Route path="/about" render={() => <MainLayout><About /></MainLayout>} />
-        <Route path="/signup" render={() => <MainLayout><Signup /></MainLayout>} />
-        <Route path="/login" render={() => <MainLayout><Login /></MainLayout>} />
+        {/* Ana sayfa */}
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          )}
+        />
+
+        {/* Ürün Detay */}
+        <Route
+          path="/detail/:id"
+          render={(props) => (
+            <MainLayout>
+              <Detail {...props} />
+            </MainLayout>
+          )}
+        />
+
+        {/* Cart sayfası */}
+        <Route
+          path="/cart"
+          render={() => (
+            <MainLayout>
+              <CartTable />
+            </MainLayout>
+          )}
+        />
+
+        {/* Diğer sayfalar */}
+        <Route
+          path="/contact"
+          render={() => (
+            <MainLayout>
+              <Contact />
+            </MainLayout>
+          )}
+        />
+        <Route
+          path="/pages"
+          render={() => (
+            <MainLayout>
+              <Pages />
+            </MainLayout>
+          )}
+        />
+        <Route
+          path="/about"
+          render={() => (
+            <MainLayout>
+              <About />
+            </MainLayout>
+          )}
+        />
+        <Route
+          path="/signup"
+          render={() => (
+            <MainLayout>
+              <Signup />
+            </MainLayout>
+          )}
+        />
+        <Route
+          path="/login"
+          render={() => (
+            <MainLayout>
+              <Login />
+            </MainLayout>
+          )}
+        />
       </Switch>
     </Router>
-  ); 
+  );
+}
+
+// Redux Provider ile sarmala
+export default function App() {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
+  );
 }
