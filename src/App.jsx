@@ -15,7 +15,7 @@ import CartTable from "./pages/CartTable";
 import { checkToken } from "./redux/actions/authActions";
 import { store } from "./redux/store"; 
 import CreateOrder from "./pages/CreateOrder.jsx";
-import PaymentPage from "./pages/PaymentPage.jsx";
+
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ function AppContent() {
   <Route path="/login" component={Login} />
   <Route path="/create-order" component={CreateOrder} />
   <Route path="/cart" component={CartTable} />
-   <Route path="/payment" component={PaymentPage} />
+  
 
 
         {/* Shop ana sayfa */}

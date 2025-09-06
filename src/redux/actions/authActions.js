@@ -1,38 +1,19 @@
-// src/redux/actions/authActions.js
-import { setUser } from "../reducers/clientReducer";
-import api, { setToken } from '../../api/axiosInstance';
+// redux/actions/authActions.js
+import axios from "axios";
 
+export const loginUser = (credentials) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: "LOGIN_REQUEST" });
 
-// App load token check
-export const checkToken = () => async (dispatch) => {
-  const token = localStorage.getItem("token");
-  if (!token) return;
+      const response = await axios.post("/api/login", credentials);
 
-  setToken(token); // axios header'a token ekle
-  try {
-    const res = await api.get("/verify"); // token doğrulama
-    dispatch(setUser(res.data)); // user bilgilerini redux’a koy
-    localStorage.setItem("token", res.data.token); // token yenilenebilir
-    setToken(res.data.token); // header'ı güncelle
-  } catch (err) {
-    localStorage.removeItem("token");
-    setToken(null); // header'dan token sil
-  }
-};
+      dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
 
-// Login action
-export const loginUser = (credentials, remember) => async (dispatch) => {
-  try {
-    const res = await api.post("/login", credentials);
-    const { token, user } = res.data;
-    dispatch(setUser(user));
-
-    if (remember) {
-      localStorage.setItem("token", token);
+      return response.data; // ⚠ Promise döndürdü
+    } catch (error) {
+      dispatch({ type: "LOGIN_FAIL", payload: error.response?.data });
+      throw error; // ⚠ Hata yakalanabilsin
     }
-    setToken(token); // axios header'a ekle
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  };
 };
