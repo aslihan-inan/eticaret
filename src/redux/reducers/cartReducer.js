@@ -18,7 +18,7 @@ export default function cartReducer(state = initialState, action) {
       );
 
       if (existingIndex >= 0) {
-        // Increase count if product already exists
+        // Ürün varsa count arttır
         const updatedCart = state.cart.map((item, index) =>
           index === existingIndex
             ? { ...item, count: item.count + 1 }
@@ -26,7 +26,7 @@ export default function cartReducer(state = initialState, action) {
         );
         return { ...state, cart: updatedCart };
       } else {
-        // Add new product
+        // Yeni ürün ekle
         return {
           ...state,
           cart: [...state.cart, { count: 1, checked: true, product }]

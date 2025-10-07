@@ -12,23 +12,33 @@ import About from "./About";
 import Signup from "./pages/signup";
 import Login from "./Login";
 import CartTable from "./pages/CartTable"; 
-import { checkToken } from "./redux/actions/authActions";
-import { store } from "./redux/store"; 
+import { loginSuccess } from "./redux/reducers/authReducer";
+import  store  from "./redux/store";
 import CreateOrder from "./pages/CreateOrder.jsx";
-
+import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function AppContent() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(checkToken());
+    // Sayfa yenilendiğinde localStorage’daki token varsa kullanıcıyı geri yükle
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user"); // stringified JSON olabilir
+    if (token && user) {
+      dispatch(loginSuccess(JSON.parse(user), token));
+    }
   }, [dispatch]);
 
   return (
-    
     <Router>
+      <Toaster position="top-right" />
       <Switch>
-        {/* Dinamik shop (gender, category vs.) */}
+        {/* Layout’suz sayfalar */}
+        <Route path="/login" component={Login} />
+         <ProtectedRoute path="/create-order" component={CreateOrder} />
+
+        {/* Layout kullanılan sayfalar */}
         <Route
           path="/shop/:gender/:categoryName/:categoryId"
           render={(props) => (
@@ -37,14 +47,7 @@ function AppContent() {
             </MainLayout>
           )}
         />
-   
-  <Route path="/login" component={Login} />
-  <Route path="/create-order" component={CreateOrder} />
-  <Route path="/cart" component={CartTable} />
-  
 
-
-        {/* Shop ana sayfa */}
         <Route
           exact
           path="/shop"
@@ -55,7 +58,6 @@ function AppContent() {
           )}
         />
 
-        {/* Ana sayfa */}
         <Route
           exact
           path="/"
@@ -66,7 +68,6 @@ function AppContent() {
           )}
         />
 
-        {/* Ürün Detay */}
         <Route
           path="/detail/:id"
           render={(props) => (
@@ -76,7 +77,6 @@ function AppContent() {
           )}
         />
 
-        {/* Cart sayfası */}
         <Route
           path="/cart"
           render={() => (
@@ -86,7 +86,6 @@ function AppContent() {
           )}
         />
 
-        {/* Diğer sayfalar */}
         <Route
           path="/contact"
           render={() => (
@@ -95,6 +94,7 @@ function AppContent() {
             </MainLayout>
           )}
         />
+
         <Route
           path="/pages"
           render={() => (
@@ -103,6 +103,7 @@ function AppContent() {
             </MainLayout>
           )}
         />
+
         <Route
           path="/about"
           render={() => (
@@ -111,19 +112,12 @@ function AppContent() {
             </MainLayout>
           )}
         />
+
         <Route
           path="/signup"
           render={() => (
             <MainLayout>
               <Signup />
-            </MainLayout>
-          )}
-        />
-        <Route
-          path="/login"
-          render={() => (
-            <MainLayout>
-              <Login />
             </MainLayout>
           )}
         />

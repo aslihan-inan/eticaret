@@ -1,19 +1,22 @@
-// redux/actions/authActions.js
-import axios from "axios";
+import api from "../../api/api"; 
+import { loginSuccess } from "../reducers/authReducer";
+import toast from "react-hot-toast";
 
-export const loginUser = (credentials) => {
-  return async (dispatch) => {
-    try {
-      dispatch({ type: "LOGIN_REQUEST" });
+export const loginUser = (data, remember) => async (dispatch) => {
+  try {
+    const res = await api.post("/login", data);
+    const { token, user } = res.data;
 
-      const response = await axios.post("/api/login", credentials);
+    dispatch(loginSuccess(user, token));
 
-      dispatch({ type: "LOGIN_SUCCESS", payload: response.data });
-
-      return response.data; // ⚠ Promise döndürdü
-    } catch (error) {
-      dispatch({ type: "LOGIN_FAIL", payload: error.response?.data });
-      throw error; // ⚠ Hata yakalanabilsin
+    if (remember) {
+      localStorage.setItem("token", token);
     }
-  };
+
+    toast.success("Giriş başarılı 🎉");
+    return true;
+  } catch (err) {
+    toast.error("Giriş başarısız. Email veya şifre hatalı.");
+    return false;
+  }
 };

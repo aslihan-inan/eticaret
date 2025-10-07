@@ -1,7 +1,8 @@
+// src/api/axiosInstance.js
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://workintech-fe-ecommerce.onrender.com",
+  baseURL: "http://localhost:5000/roles", // <— backend port ve /api
   headers: { "Content-Type": "application/json" },
 });
 

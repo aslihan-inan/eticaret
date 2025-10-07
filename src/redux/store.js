@@ -1,13 +1,14 @@
 // src/redux/store.js
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./slices/cartSlice";
-import productReducer from "./reducers/productReducer";
-import categoryReducer from "./reducers/categoryReducer";
+import authReducer from "./slices/authSlice"; // varsa auth için ekle
 
-export const store = configureStore({
+const store = configureStore({
   reducer: {
     cart: cartReducer,
-    product: productReducer,
-    category: categoryReducer,
+    auth: authReducer, // varsa ekle
+    // başka slice'lar eklenecekse buraya
   },
 });
+
+export default store;
