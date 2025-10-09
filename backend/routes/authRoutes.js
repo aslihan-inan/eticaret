@@ -1,18 +1,19 @@
+// backend/routes/authRoutes.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
-// In-memory users array
+// In-memory users
 const users = [];
 const roles = [
   { id: 1, name: "Customer" },
   { id: 2, name: "Store" },
-  { id: 3, name: "Admin" }
+  { id: 3, name: "Admin" },
 ];
 
-// Signup
+// ✅ Signup
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, role_id, store } = req.body;
@@ -30,8 +31,8 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// Login
-router.post("/auth/login", async (req, res) => {
+// ✅ Login
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = users.find(u => u.email === email);
@@ -48,7 +49,7 @@ router.post("/auth/login", async (req, res) => {
   }
 });
 
-// Roles
+// ✅ Roles
 router.get("/roles", (req, res) => {
   res.json(roles);
 });

@@ -12,11 +12,13 @@ const SalesCard = ({ buttonColor = 'blue', onColorSelect }) => {
   const { bg, hover, text, border } = colorConfig[buttonColor] || colorConfig.blue;
 
   return (
-    <div className="flex w-[508px] h-[404px] overflow-hidden rounded-lg shadow-md">
-      <div className="w-[209px] h-full flex-shrink-0">
+    <div className="flex flex-col md:flex-row w-full max-w-xl mx-auto overflow-hidden rounded-lg shadow-md">
+      {/* Resim */}
+      <div className="w-full md:w-1/3 h-64 md:h-auto flex-shrink-0">
         <img src={image01} alt="Product" className="w-full h-full object-cover" />
       </div>
 
+      {/* İçerik */}
       <div className="flex flex-col flex-grow p-6 gap-3">
         <div>
           <h2 className="text-gray-500 text-sm font-medium">English Department</h2>
@@ -40,7 +42,7 @@ const SalesCard = ({ buttonColor = 'blue', onColorSelect }) => {
               onClick={() => onColorSelect?.(color)}
               className={`
                 w-5 h-5 rounded-full
-                bg-${color}-600 hover:bg-${color}-700
+                ${colorConfig[color].bg} ${colorConfig[color].hover}
                 border-2
                 ${buttonColor === color ? 'border-gray-900' : 'border-white'}
                 transition
@@ -52,10 +54,9 @@ const SalesCard = ({ buttonColor = 'blue', onColorSelect }) => {
           ))}
         </div>
 
-        <div className="flex justify-between text-sm text-gray-600 mb-4">
+        <div className="flex flex-wrap justify-between text-sm text-gray-600 mt-2 mb-4 gap-2">
           <div className="flex items-center gap-1">
- 
-             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <span>22h...</span>

@@ -1,8 +1,7 @@
-// src/redux/slices/cartSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  cart: [],
+  cart: []
 };
 
 const cartSlice = createSlice({
@@ -10,15 +9,12 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const existing = state.cart.find(item => item.product.id === action.payload.id);
-      if (existing) {
-        existing.count += 1; // ürün varsa sayısını artır
+      const exists = state.cart.find(item => item.product.id === action.payload.id);
+      if (exists) {
+        exists.count += 1;
       } else {
-        state.cart.push({ product: action.payload, count: 1, checked: true }); // yoksa ekle ve checked default true
+        state.cart.push({ product: action.payload, count: 1, checked: true });
       }
-    },
-    removeFromCart: (state, action) => {
-      state.cart = state.cart.filter(item => item.product.id !== action.payload);
     },
     increaseCount: (state, action) => {
       const item = state.cart.find(i => i.product.id === action.payload);
@@ -32,8 +28,11 @@ const cartSlice = createSlice({
       const item = state.cart.find(i => i.product.id === action.payload);
       if (item) item.checked = !item.checked;
     },
-  },
+    removeFromCart: (state, action) => {
+      state.cart = state.cart.filter(i => i.product.id !== action.payload);
+    }
+  }
 });
 
-export const { addToCart, removeFromCart, increaseCount, decreaseCount, toggleChecked } = cartSlice.actions;
+export const { addToCart, increaseCount, decreaseCount, toggleChecked, removeFromCart } = cartSlice.actions;
 export default cartSlice.reducer;

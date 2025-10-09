@@ -1,21 +1,27 @@
 const express = require("express");
 const cors = require("cors");
-const authRoutes = require("./routes/authRoutes"); // path doğru mu kontrol et
 
 const app = express();
 
-// Middleware
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+
+// ✅ CORS en üstte
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.options("*", cors()); // preflight desteği
+
 app.use(express.json());
 
-// CORS ayarı
-app.use(cors({
-  origin: "http://localhost:5173", // frontend port
-  credentials: true
-}));
+// ✅ Route’lar
+app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 
-// Routes
-app.use("/", authRoutes);
-
-// Server
 const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`✅ Server running on http://localhost:${PORT}`)
+);

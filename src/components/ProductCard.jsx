@@ -4,9 +4,9 @@ import X from "../assets/work.jpg";
 // Tek ürün kartı bileşeni
 function ProductCard({ product }) {
   return (
-    <article className="flex flex-col bg-white overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <article className="flex flex-col bg-white overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full sm:w-56 md:w-60 lg:w-64 mx-auto">
       {/* Ürün görseli */}
-      <div className="w-[239px] h-[400px] overflow-hidden mx-auto">
+      <div className="w-full h-64 sm:h-72 md:h-80 overflow-hidden">
         <img
           src={product.imageUrl}
           alt={product.title}
@@ -27,16 +27,16 @@ function ProductCard({ product }) {
 
         {/* Fiyat bilgisi */}
         <div className="flex justify-center gap-2 mt-4">
-       <span className="text-sm text-gray-400 line-through">
-  ${product.originalPrice?.toFixed(2) ?? "16.48"}
-</span>
-<span className="text-sm font-bold text-blue-600">
-  ${product.discountedPrice?.toFixed(2) ?? "6.48"}
-</span>
-
+          <span className="text-sm text-gray-400 line-through">
+            ${product.originalPrice?.toFixed(2) ?? "16.48"}
+          </span>
+          <span className="text-sm font-bold text-blue-600">
+            ${product.discountedPrice?.toFixed(2) ?? "6.48"}
+          </span>
         </div>
       </div>
     </article>
   );
 }
+
 export default ProductCard;

@@ -137,7 +137,7 @@ export default function Header() {
                         className="flex items-center justify-between border-b pb-2"
                       >
                         <img
-                          src={item.product.image || "/placeholder.png"}
+                          src={item.product.image || "/work.jpg"}
                           alt={item.product.name}
                           className="w-12 h-12 object-cover rounded-md border"
                         />

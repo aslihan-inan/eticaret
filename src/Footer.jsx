@@ -4,10 +4,10 @@ import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 const Footer = () => {
   return (
     <div className="w-full bg-white text-gray-700">
-     
 
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-40 h-[142px] border-b border-gray-200 flex items-center justify-between">
-        <h1 className="text-[24px] md:text-[32px] font-bold text-gray-900">Bandage</h1>
+      {/* Logo ve Sosyal Medya */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-20 h-[142px] border-b border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+        <h1 className="text-[24px] sm:text-[28px] md:text-[32px] font-bold text-gray-900">Bandage</h1>
         <div className="flex space-x-4">
           <a href="#" className="text-blue-600 hover:text-gray-600">
             <FaFacebook size={24} />
@@ -21,11 +21,9 @@ const Footer = () => {
         </div>
       </div>
 
-    
-
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-40 py-12 border-b border-gray-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-      
-
+      {/* Footer Links ve Form */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-20 py-10 sm:py-12 border-b border-gray-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8">
+        
         <div className="flex flex-col space-y-3">
           <h3 className="text-base font-bold text-gray-900">Company Info</h3>
           <a href="#" className="text-sm hover:text-blue-600">About Us</a>
@@ -33,8 +31,6 @@ const Footer = () => {
           <a href="#" className="text-sm hover:text-blue-600">We are hiring</a>
           <a href="#" className="text-sm hover:text-blue-600">Blog</a>
         </div>
-
-       
 
         <div className="flex flex-col space-y-3">
           <h3 className="text-base font-bold text-gray-900">Legal</h3>
@@ -44,8 +40,6 @@ const Footer = () => {
           <a href="#" className="text-sm hover:text-blue-600">Blog</a>
         </div>
 
-       
-
         <div className="flex flex-col space-y-3">
           <h3 className="text-base font-bold text-gray-900">Features</h3>
           <a href="#" className="text-sm hover:text-blue-600">Business Marketing</a>
@@ -53,8 +47,6 @@ const Footer = () => {
           <a href="#" className="text-sm hover:text-blue-600">Live Chat</a>
           <a href="#" className="text-sm hover:text-blue-600">Unlimited Support</a>
         </div>
-
-
 
         <div className="flex flex-col space-y-3">
           <h3 className="text-base font-bold text-gray-900">Resources</h3>
@@ -64,28 +56,25 @@ const Footer = () => {
           <a href="#" className="text-sm hover:text-blue-600">API</a>
         </div>
 
-
-
         <div className="flex flex-col space-y-4">
           <h3 className="text-base font-bold text-gray-900">Get In Touch</h3>
-          <form className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <form className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full">
             <input 
               type="email" 
               placeholder="Your Email" 
               className="px-4 py-2 w-full sm:w-auto text-sm border rounded focus:outline-none"
             />
-            <button className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700 transition">
+            <button className="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700 transition w-full sm:w-auto">
               Subscribe
             </button>
           </form>
-          <p className="text-xs text-gray-500">Lore Imp sum dolor Amit</p>
+          <p className="text-xs text-gray-500 text-center sm:text-left">Lore Imp sum dolor Amit</p>
         </div>
       </div>
 
-      
-      
-      <div className="flex justify-center items-center h-[74px] text-sm text-gray-600 px-4">
-        <p className="text-center">
+      {/* Alt Bar */}
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center h-[74px] text-sm text-gray-600 px-4 sm:px-8 lg:px-20 gap-2 sm:gap-0">
+        <p className="text-center sm:text-left">
           <strong>Made With Love By Finland</strong> All Right Reserved
         </p>
       </div>

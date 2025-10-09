@@ -7,6 +7,7 @@ export default function Nlight() {
   const dispatch = useDispatch();
   const categories = useSelector((state) => state.categories?.list || []);
   const [openShop, setOpenShop] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -15,84 +16,72 @@ export default function Nlight() {
   const womenCategories = categories.filter(c => c.gender === "kadin");
   const menCategories = categories.filter(c => c.gender === "erkek");
 
-  // Top 5
-  const topWomen = womenCategories
-    .sort((a,b) => b.rating - a.rating)
-    .slice(0,5);
-
-  const topMen = menCategories
-    .sort((a,b) => b.rating - a.rating)
-    .slice(0,5);
-
+  const topWomen = womenCategories.sort((a,b) => b.rating - a.rating).slice(0,5);
+  const topMen = menCategories.sort((a,b) => b.rating - a.rating).slice(0,5);
   const otherWomen = womenCategories.filter(c => !topWomen.includes(c));
   const otherMen = menCategories.filter(c => !topMen.includes(c));
 
   return (
-    <nav className=" bg-white ">
+    <nav className="bg-white shadow">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
 
         {/* Logo */}
         <div className="text-2xl font-bold">BrandName</div>
 
-        {/* Ana Menü */}
-        <ul className="flex space-x-6 items-center">
-          <li><Link to="/" className="hover:text-blue-600">Home</Link></li>
+        {/* Hamburger for mobile */}
+        <button
+          className="md:hidden flex items-center text-gray-700"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+          </svg>
+        </button>
+
+        {/* Desktop & Mobile Menu */}
+        <ul className={`flex flex-col md:flex-row md:space-x-6 items-center absolute md:static top-full left-0 w-full md:w-auto bg-white md:bg-transparent border-t md:border-0 transition-all duration-300 ${mobileMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"} md:max-h-full`}>
+          
+          <li><Link to="/" className="block px-4 py-2 hover:text-blue-600">Home</Link></li>
 
           {/* Shop Dropdown */}
           <li className="relative">
             <button
               onClick={() => setOpenShop(!openShop)}
-              className="c space-x-1 hover:text-blue-600"
+              className="flex items-center justify-between px-4 py-2 w-full hover:text-blue-600 md:w-auto"
             >
               <span>Shop</span>
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
 
             {openShop && (
-              <div className="absolute top-full left-0 mt-2 bg-white border rounded shadow-md z-10 p-4 flex space-x-6 justify-center">
-                {/* Kadın Kategorileri */}
-                <div className="flex flex-col items-center">
+              <div className="md:absolute md:top-full md:left-0 md:mt-2 bg-white border rounded shadow-md z-10 p-4 flex flex-col md:flex-row md:space-x-6 w-full md:w-auto">
+                {/* Kadın */}
+                <div className="flex flex-col items-start md:items-center mb-2 md:mb-0">
                   <span className="font-semibold mb-2 text-center">Kadın</span>
                   {topWomen.map(cat => (
-                    <Link
-                      key={cat.id}
-                      to={`/shop/${cat.gender}/${cat.name}/${cat.id}`}
-                      className="block px-4 py-1 hover:bg-blue-100 rounded text-center font-medium"
-                    >
+                    <Link key={cat.id} to={`/shop/${cat.gender}/${cat.name}/${cat.id}`} className="block px-4 py-1 hover:bg-blue-100 rounded text-center font-medium">
                       {cat.name}
                     </Link>
                   ))}
                   {otherWomen.map(cat => (
-                    <Link
-                      key={cat.id}
-                      to={`/shop/${cat.gender}/${cat.name}/${cat.id}`}
-                      className="block px-4 py-0.5 text-sm text-gray-500 hover:bg-blue-50 rounded text-center"
-                    >
+                    <Link key={cat.id} to={`/shop/${cat.gender}/${cat.name}/${cat.id}`} className="block px-4 py-0.5 text-sm text-gray-500 hover:bg-blue-50 rounded text-center">
                       {cat.name}
                     </Link>
                   ))}
                 </div>
 
-                {/* Erkek Kategorileri */}
-                <div className="flex flex-col items-center">
+                {/* Erkek */}
+                <div className="flex flex-col items-start md:items-center">
                   <span className="font-semibold mb-2 text-center">Erkek</span>
                   {topMen.map(cat => (
-                    <Link
-                      key={cat.id}
-                      to={`/shop/${cat.gender}/${cat.name}/${cat.id}`}
-                      className="block px-4 py-1 hover:bg-blue-100 rounded text-center font-medium"
-                    >
+                    <Link key={cat.id} to={`/shop/${cat.gender}/${cat.name}/${cat.id}`} className="block px-4 py-1 hover:bg-blue-100 rounded text-center font-medium">
                       {cat.name}
                     </Link>
                   ))}
                   {otherMen.map(cat => (
-                    <Link
-                      key={cat.id}
-                      to={`/shop/${cat.gender}/${cat.name}/${cat.id}`}
-                      className="block px-4 py-0.5 text-sm text-gray-500 hover:bg-blue-50 rounded text-center"
-                    >
+                    <Link key={cat.id} to={`/shop/${cat.gender}/${cat.name}/${cat.id}`} className="block px-4 py-0.5 text-sm text-gray-500 hover:bg-blue-50 rounded text-center">
                       {cat.name}
                     </Link>
                   ))}
@@ -101,14 +90,14 @@ export default function Nlight() {
             )}
           </li>
 
-          <li><Link to="/about" className="hover:text-blue-600">About</Link></li>
-          <li><Link to="/blog" className="hover:text-blue-600">Blog</Link></li>
-          <li><Link to="/contact" className="hover:text-blue-600">Contact</Link></li>
-          <li><Link to="/pages" className="hover:text-blue-600">Pages</Link></li>
+          <li><Link to="/about" className="block px-4 py-2 hover:text-blue-600">About</Link></li>
+          <li><Link to="/blog" className="block px-4 py-2 hover:text-blue-600">Blog</Link></li>
+          <li><Link to="/contact" className="block px-4 py-2 hover:text-blue-600">Contact</Link></li>
+          <li><Link to="/pages" className="block px-4 py-2 hover:text-blue-600">Pages</Link></li>
         </ul>
 
-        {/* Sağ Butonlar */}
-        <div className="flex items-center space-x-4 text-sm">
+        {/* Sağ Butonlar (Desktop Only) */}
+        <div className="hidden md:flex items-center space-x-4 text-sm">
           <Link to="/login" className="text-blue-600 hover:underline flex items-center space-x-1">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zM7 21v-2a4 4 0 014-4h2a4 4 0 014 4v2" />

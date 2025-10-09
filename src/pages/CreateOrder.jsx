@@ -1,6 +1,8 @@
+// src/pages/CheckoutPage.jsx
 import React, { useState, useEffect } from "react";
 import { Plus, Edit } from "lucide-react";
 import api from "../api/api.js";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function CheckoutPage() {
   // --- Adres State ---
@@ -21,24 +23,16 @@ export default function CheckoutPage() {
   const [showCardForm, setShowCardForm] = useState(false);
   const [isEditingCard, setIsEditingCard] = useState(false);
 
-  // --- Adres input değişikliği ---
-  const handleAddressChange = (e) => setNewAddress({...newAddress, [e.target.name]: e.target.value});
+  // --- Sepet State ---
+  const [cartItems, setCartItems] = useState([]);
 
-  // --- Adres kaydet ---
-  const handleSaveAddress = () => {
-    if (!newAddress.title || !newAddress.name || !newAddress.surname || !newAddress.phone || !newAddress.city) {
-      alert("Lütfen tüm zorunlu alanları doldurun!");
-      return;
-    }
-    const newAddrWithId = { ...newAddress, id: Date.now() };
-    setAddresses([...addresses, newAddrWithId]);
-    setNewAddress({ title: "", name: "", surname: "", phone: "", city: "", district: "", neighborhood: "", address: "" });
-    setShowAddressForm(false);
-  };
+  // --- Component Did Mount ---
+  useEffect(() => {
+    fetchCards();
+    fetchCart();
+  }, []);
 
-  // --- Kart işlemleri ---
-  useEffect(() => { fetchCards(); }, []);
-
+  // --- API Calls ---
   const fetchCards = async () => {
     try {
       const res = await api.get("/user/card");
@@ -48,6 +42,29 @@ export default function CheckoutPage() {
     }
   };
 
+  const fetchCart = async () => {
+    try {
+      const res = await api.get("/user/cart");
+      setCartItems(res.data || []);
+    } catch (err) {
+      console.error("Sepeti çekerken hata:", err.response?.data || err.message);
+    }
+  };
+
+  // --- Adres İşlemleri ---
+  const handleAddressChange = (e) => setNewAddress({...newAddress, [e.target.name]: e.target.value});
+  const handleSaveAddress = () => {
+    if (!newAddress.title || !newAddress.name || !newAddress.surname || !newAddress.phone || !newAddress.city) {
+      toast.error("Lütfen tüm zorunlu alanları doldurun!");
+      return;
+    }
+    const newAddrWithId = { ...newAddress, id: Date.now() };
+    setAddresses([...addresses, newAddrWithId]);
+    setNewAddress({ title: "", name: "", surname: "", phone: "", city: "", district: "", neighborhood: "", address: "" });
+    setShowAddressForm(false);
+  };
+
+  // --- Kart İşlemleri ---
   const handleAddCard = async (e) => {
     e.preventDefault();
     try {
@@ -58,10 +75,10 @@ export default function CheckoutPage() {
       });
       setCards(prev => [...prev, res.data]);
       resetCardForm();
-      alert("Kart başarıyla kaydedildi ✅");
+      toast.success("Kart başarıyla kaydedildi ✅");
     } catch (err) {
       console.error(err);
-      alert(`Kart eklenirken hata: ${err.response?.data?.message || err.message}`);
+      toast.error(`Kart eklenirken hata: ${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -76,10 +93,10 @@ export default function CheckoutPage() {
       });
       fetchCards();
       resetCardForm();
-      alert("Kart başarıyla güncellendi ✅");
+      toast.success("Kart başarıyla güncellendi ✅");
     } catch (err) {
       console.error(err);
-      alert(`Kart güncellenirken hata: ${err.response?.data?.message || err.message}`);
+      toast.error(`Kart güncellenirken hata: ${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -88,10 +105,10 @@ export default function CheckoutPage() {
     try {
       await api.delete(`/user/card/${id}`);
       fetchCards();
-      alert("Kart başarıyla silindi ✅");
+      toast.success("Kart başarıyla silindi ✅");
     } catch (err) {
       console.error(err);
-      alert(`Kart silinirken hata: ${err.response?.data?.message || err.message}`);
+      toast.error(`Kart silinirken hata: ${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -109,8 +126,59 @@ export default function CheckoutPage() {
     setShowCardForm(true);
   };
 
+  // --- Checkout / Sipariş Oluştur ---
+  const handleCheckout = async () => {
+    if (!selectedAddressId) {
+      toast.error("Lütfen bir adres seçin!");
+      return;
+    }
+    if (!selectedCardId) {
+      toast.error("Lütfen bir kart seçin!");
+      return;
+    }
+    if (cartItems.length === 0) {
+      toast.error("Sepetiniz boş!");
+      return;
+    }
+
+    const selectedCard = cards.find(c => c.id === selectedCardId);
+    const totalPrice = cartItems.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 0), 0);
+    const shipping = totalPrice >= 150 ? 0 : 29.99;
+    const payload = {
+      address_id: selectedAddressId,
+      order_date: new Date().toISOString(),
+      card_no: selectedCard.card_no,
+      card_name: selectedCard.name_on_card,
+      card_expire_month: selectedCard.expire_month,
+      card_expire_year: selectedCard.expire_year,
+      card_ccv: 123, // CCV değerini formdan alabilirsin
+      price: totalPrice + shipping,
+      products: cartItems.map(item => ({
+        product_id: item.id,
+        count: item.quantity,
+        detail: item.detail || ""
+      }))
+    };
+
+    try {
+      await api.post("/order", payload);
+      toast.success("Tebrikler, siparişiniz başarıyla alındı! 🎉");
+      setCartItems([]); // Sepeti temizle
+    } catch (err) {
+      console.error("Sipariş oluşturma hatası:", err.response?.data || err.message);
+      toast.error("Sipariş oluşturulamadı!");
+    }
+  };
+
+  // --- Sepet toplam hesaplama ---
+  const productTotal = cartItems.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 0), 0);
+  const shipping = productTotal >= 150 ? 0 : 29.99;
+  const total = productTotal + shipping;
+
   return (
     <div className="max-w-6xl mx-auto py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <Toaster position="top-right" />
+      
       {/* --- Sol Alan: Adres ve Kartlar --- */}
       <div className="lg:col-span-2 space-y-6">
         {/* --- Adresler --- */}
@@ -119,7 +187,6 @@ export default function CheckoutPage() {
           <button onClick={() => setShowAddressForm(true)} className="flex items-center justify-center border-2 border-dashed rounded-xl p-6 text-gray-500 hover:bg-gray-50">
             <Plus className="mr-2" /> Yeni Adres Ekle
           </button>
-
           <div className="grid md:grid-cols-2 gap-4 mt-4">
             {addresses.map(addr => (
               <div key={addr.id} onClick={() => setSelectedAddressId(addr.id)} className={`border rounded-xl p-4 cursor-pointer relative ${selectedAddressId === addr.id ? "border-orange-500" : "border-gray-200"}`}>
@@ -128,13 +195,9 @@ export default function CheckoutPage() {
                 <p className="text-sm text-gray-600">{addr.phone}</p>
                 <p className="text-sm text-gray-600">{addr.city} / {addr.district}</p>
                 <p className="text-sm text-gray-600">{addr.neighborhood}</p>
-                <button className="absolute top-2 right-2 text-sm text-blue-500 flex items-center">
-                  <Edit size={14} className="mr-1" /> Düzenle
-                </button>
               </div>
             ))}
           </div>
-
           {showAddressForm && (
             <div className="mt-6 border-t pt-4 space-y-3">
               <input name="title" placeholder="Adres Başlığı" value={newAddress.title} onChange={handleAddressChange} className="w-full border rounded p-2 text-sm"/>
@@ -195,12 +258,12 @@ export default function CheckoutPage() {
       <div className="border rounded-2xl p-4 shadow-sm h-fit">
         <h2 className="text-lg font-semibold mb-4">Sipariş Özeti</h2>
         <div className="space-y-2 text-sm">
-          <div className="flex justify-between"><span>Ürünün Toplamı</span><span>8.448,99 TL</span></div>
-          <div className="flex justify-between"><span>Kargo Toplam</span><span>29,99 TL</span></div>
-          <div className="flex justify-between text-green-600"><span>150 TL ve Üzeri Kargo Bedava</span><span>-29,99 TL</span></div>
-          <div className="border-t pt-2 flex justify-between font-semibold"><span>Toplam</span><span>8.448,99 TL</span></div>
+          <div className="flex justify-between"><span>Ürünün Toplamı</span><span>{productTotal.toFixed(2)} TL</span></div>
+          <div className="flex justify-between"><span>Kargo Toplam</span><span>{shipping.toFixed(2)} TL</span></div>
+          {shipping === 0 && <div className="flex justify-between text-green-600"><span>150 TL ve Üzeri Kargo Bedava</span><span>-29,99 TL</span></div>}
+          <div className="border-t pt-2 flex justify-between font-semibold"><span>Toplam</span><span>{total.toFixed(2)} TL</span></div>
         </div>
-        <button className="mt-4 w-full bg-orange-500 text-white py-2 rounded-xl hover:bg-orange-600">Ödeme Yap</button>
+        <button onClick={handleCheckout} className="mt-4 w-full bg-orange-500 text-white py-2 rounded-xl hover:bg-orange-600">Ödeme Yap</button>
       </div>
     </div>
   );

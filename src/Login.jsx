@@ -36,37 +36,45 @@ export default function Login() {
   };
 
   return (
-    <div className="p-6 max-w-sm mx-auto">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <Toaster position="top-right" />
-      <h2 className="text-2xl font-bold mb-4 text-center">Giriş Yap</h2>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 border p-4 rounded-lg shadow"
-      >
-        <input
-          type="email"
-          placeholder="Email"
-          {...register("email", { required: "Email gerekli" })}
-          className="border p-2 w-full rounded"
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-
-        <input
-          type="password"
-          placeholder="Şifre"
-          {...register("password", { required: "Şifre gerekli" })}
-          className="border p-2 w-full rounded"
-        />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full py-2 rounded text-white ${isSubmitting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`}
+      <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md sm:p-8">
+        <h2 className="text-2xl font-bold mb-6 text-center">Giriş Yap</h2>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
         >
-          {isSubmitting ? "Giriş yapılıyor..." : "Giriş Yap"}
-        </button>
-      </form>
+          <div className="flex flex-col">
+            <input
+              type="email"
+              placeholder="Email"
+              {...register("email", { required: "Email gerekli" })}
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
+
+          <div className="flex flex-col">
+            <input
+              type="password"
+              placeholder="Şifre"
+              {...register("password", { required: "Şifre gerekli" })}
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full py-3 rounded text-white font-medium transition-colors duration-300 ${
+              isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            {isSubmitting ? "Giriş yapılıyor..." : "Giriş Yap"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

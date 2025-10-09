@@ -1,9 +1,6 @@
-
 import React from 'react';
 import { Link } from "react-router-dom";
 import X from './assets/tabak.jpg';
-
-
 
 export default function Best({ buttonColor = 'blue', onColorSelect }) {
   const products = Array(8).fill(null).map((_, i) => ({
@@ -16,15 +13,17 @@ export default function Best({ buttonColor = 'blue', onColorSelect }) {
   }));
 
   return (
-    <div>
-        <h1 className="text-lg font-bold flex justify-center">BESTSELLER PRODUCTS</h1>
-      <section className="bg-white font-sans  flex justify-center mt-20">
-        <div className="max-w-[1115px] w-full">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-auto gap-4">
+    <div className="px-4 sm:px-6 md:px-8 lg:px-20 py-10">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8">
+        BESTSELLER PRODUCTS
+      </h1>
+      <section className="bg-white font-sans flex justify-center">
+        <div className="w-full max-w-[1115px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
-              <Link key={product.id} to={`/detail/${product.id}`}>
-                <article className="flex flex-col bg-white overflow-hidden hover:shadow-lg transition-shadow mx-auto duration-500">
-                  <div className="w-[239px] h-[280px] overflow-hidden">
+              <Link key={product.id} to={`/detail/${product.id}`} className="flex justify-center">
+                <article className="flex flex-col bg-white overflow-hidden hover:shadow-lg transition-shadow duration-500 w-full max-w-[239px]">
+                  <div className="w-full h-60 sm:h-64 md:h-72 overflow-hidden rounded-md">
                     <img
                       src={product.imageUrl}
                       alt={product.title}
@@ -40,8 +39,6 @@ export default function Best({ buttonColor = 'blue', onColorSelect }) {
                     <div className="flex justify-center gap-2 mt-2">
                       <span className="text-sm text-gray-400 line-through">{product.originalPrice}</span>
                       <span className="text-sm font-bold text-blue-600">{product.discountedPrice}</span>
-                    </div>
-                    <div className="flex justify-center space-x-2 mt-4">
                     </div>
                   </div>
                 </article>

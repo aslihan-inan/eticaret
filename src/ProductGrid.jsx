@@ -13,26 +13,23 @@ export default function ProductGrid() {
   return (
     <section className="py-12 px-4 max-w-7xl mx-auto">
       <div className="flex flex-col lg:flex-row gap-6">
-      
 
-
+        {/* Büyük Ürün */}
         <div className="w-full lg:w-1/2 rounded-lg overflow-hidden relative aspect-[4/3]">
           <img
             src={products[0].image}
             alt={products[0].title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute bottom-0 left-0 w-full bg-blue-500/80 text-white p-6">
-            <h3 className="text-lg font-semibold mb-2">{products[0].title}</h3>
+          <div className="absolute bottom-0 left-0 w-full bg-blue-500/80 text-white p-6 flex flex-col gap-2">
+            <h3 className="text-lg font-semibold">{products[0].title}</h3>
             <button className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-blue-500 transition">
               EXPLORE ITEMS
             </button>
           </div>
         </div>
 
-        
-
-        
+        {/* Küçük Ürünler */}
         <div className="w-full lg:w-1/2 flex flex-col gap-6">
           {[products[1], products[2]].map((product) => (
             <div
@@ -44,8 +41,8 @@ export default function ProductGrid() {
                 alt={product.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-0 left-0 w-full bg-blue-500/80 text-white p-6">
-                <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
+              <div className="absolute bottom-0 left-0 w-full bg-blue-500/80 text-white p-4 md:p-6 flex flex-col gap-2">
+                <h3 className="text-lg font-semibold">{product.title}</h3>
                 <button className="px-4 py-2 border border-white text-white rounded hover:bg-white hover:text-blue-500 transition">
                   EXPLORE ITEMS
                 </button>

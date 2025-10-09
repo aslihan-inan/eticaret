@@ -36,7 +36,7 @@ const products = [
 export default function ProductDetail() {
   const { id } = useParams();
   const history = useHistory();
-  const dispatch = useDispatch(); // <-- yalnızca burayı tanımlıyoruz
+  const dispatch = useDispatch();
   const product = products.find((p) => p.id === parseInt(id));
 
   const [selectedImage, setSelectedImage] = useState(
@@ -53,48 +53,45 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="w-full bg-white md:px-8 py-6">
-      {/* Back Button */}
-   
-      {/* Breadcrumb */}
-      <div className=" flex justify-between">
-     <nav className="max-w-[1200px] ml-0 flex items-center text-sm text-gray-500 space-x-2 mb-6 justify-start">
-  <Link to="/" className="font-semibold text-gray-800 hover:text-blue-600">
-    Home
-  </Link>
-  <ChevronRight size={16} className="text-gray-400" />
-  <Link to="/shop" className="hover:text-blue-600">
-    Shop
-  </Link>
-  <ChevronRight size={16} className="text-gray-400" />
-  <span className="text-gray-600">{product.title}</span>
-</nav>
+    <div className="w-full bg-white px-4 sm:px-6 md:px-8 py-6">
+      {/* Breadcrumb + Back */}
+      <div className="flex flex-col sm:flex-row justify-between mb-6">
+        <nav className="flex items-center text-sm text-gray-500 space-x-2 mb-2 sm:mb-0">
+          <Link to="/" className="font-semibold text-gray-800 hover:text-blue-600">
+            Home
+          </Link>
+          <ChevronRight size={16} className="text-gray-400" />
+          <Link to="/shop" className="hover:text-blue-600">
+            Shop
+          </Link>
+          <ChevronRight size={16} className="text-gray-400" />
+          <span className="text-gray-600">{product.title}</span>
+        </nav>
 
-   <div  className="mb-4 px-4 py-2 text-gray-700 text-right">
-      <button
-        onClick={() => history.goBack()}
-        className="mb-4 px-4 py-2 text-gray-700 text-right"
-      >
-        ← Back
-      </button>
-</div>
-</div>
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <button
+          onClick={() => history.goBack()}
+          className="text-gray-700 text-sm sm:text-base hover:text-blue-600"
+        >
+          ← Back
+        </button>
+      </div>
+
+      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Left: Images */}
         <div>
-          <div className="w-full h-[506px] md:h-[450px] overflow-hidden rounded-md border">
+          <div className="w-full h-[350px] sm:h-[450px] md:h-[500px] overflow-hidden rounded-md border">
             <img
               src={selectedImage}
               alt={product.title}
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex gap-3 mt-4">
+          <div className="flex gap-2 sm:gap-3 mt-3 sm:mt-4 overflow-x-auto">
             {product.images.map((img, idx) => (
               <div
                 key={idx}
                 onClick={() => setSelectedImage(img)}
-                className={`w-[100px] h-[75px] border rounded-md cursor-pointer overflow-hidden ${
+                className={`w-[70px] sm:w-[100px] h-[50px] sm:h-[75px] border rounded-md cursor-pointer overflow-hidden flex-shrink-0 ${
                   selectedImage === img ? "ring-2 ring-blue-500" : ""
                 }`}
               >
@@ -109,13 +106,14 @@ export default function ProductDetail() {
         </div>
 
         {/* Right: Info */}
-        <div className="flex flex-col justify-start">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">{product.title}</h1>
+        <div className="flex flex-col justify-start mt-6 lg:mt-0">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+            {product.title}
+          </h1>
           <div className="flex items-center gap-2 text-yellow-500 mb-2">
-            ★★★★☆{" "}
-            <span className="text-gray-500 text-sm">{product.reviews} Reviews</span>
+            ★★★★☆ <span className="text-gray-500 text-sm">{product.reviews} Reviews</span>
           </div>
-          <p className="text-2xl font-semibold text-gray-900 mb-2">
+          <p className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
             ${product.price}
           </p>
           <p className="text-sm mb-4">
@@ -133,7 +131,7 @@ export default function ProductDetail() {
           <p className="text-gray-600 mb-6">{product.description}</p>
 
           {/* Colors */}
-          <div className="flex gap-3 mb-6">
+          <div className="flex gap-2 sm:gap-3 mb-6 flex-wrap">
             {product.colors.map((color, idx) => (
               <button
                 key={idx}
@@ -143,7 +141,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Buttons: Sepete ekle + Heart + Eye */}
-          <div className="flex gap-3 mb-6">
+          <div className="flex gap-2 sm:gap-3 flex-wrap">
             <button
               onClick={handleAddToCart}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex items-center gap-2"

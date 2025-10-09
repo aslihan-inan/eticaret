@@ -9,14 +9,14 @@ const logos = [logo1, logo2, logo3, logo4, logo5, logo6];
 
 export default function Logo() {
   return (
-    <section className="w-full py-10 px-4">
-      <div className="max-w-[1200px] mx-auto flex flex-wrap justify-center md:justify-between items-center gap-6">
+    <section className="w-full py-8 sm:py-10 px-4">
+      <div className="max-w-[1200px] mx-auto flex flex-wrap justify-center md:justify-between items-center gap-4 sm:gap-6">
         {logos.map((logo, i) => (
           <img
             key={i}
             src={logo}
             alt={`Logo ${i + 1}`}
-            className="h-8 md:h-10 lg:h-12 object-contain"
+            className="h-6 sm:h-8 md:h-10 lg:h-12 object-contain"
           />
         ))}
       </div>

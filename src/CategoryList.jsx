@@ -17,17 +17,21 @@ export default function CategoryList() {
     .slice(0, 5);
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Top Categories</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+    <div className="p-4 max-w-[1200px] mx-auto">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">Top Categories</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {top5.map(cat => (
           <Link
             key={cat.id}
             to={`/shop/${cat.gender}/${cat.name.toLowerCase()}/${cat.id}`}
-            className="block text-center border rounded p-2 hover:shadow-lg"
+            className="block text-center border rounded p-2 hover:shadow-lg transition-shadow duration-300"
           >
-            <img src={cat.image} alt={cat.name} className="w-full h-24 object-cover mb-2"/>
-            <span>{cat.name}</span>
+            <img
+              src={cat.image}
+              alt={cat.name}
+              className="w-full h-40 sm:h-32 md:h-28 lg:h-24 object-cover mb-2 rounded"
+            />
+            <span className="text-sm sm:text-base font-medium">{cat.name}</span>
           </Link>
         ))}
       </div>
