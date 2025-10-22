@@ -8,7 +8,7 @@ import {
   toggleChecked,
   removeFromCart,
 } from "../redux/slices/cartSlice";
-import OrderSummary from "../components/OrderSummary"; // ✅ Sipariş Özeti bileşeni
+import OrderSummary from "../components/OrderSummary"; 
 import X from "../assets/work.jpg";
 
 // Çöp kutusu ikonu için SVG

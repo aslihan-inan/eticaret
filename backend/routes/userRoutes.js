@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/card", (req, res) => {
+router.get("/user/card", (req, res) => {
   res.json({ cards: [] });
 });
 
-router.get("/address", (req, res) => {
+router.get("/user/address", (req, res) => {
   res.json({ addresses: [] });
 });
 
