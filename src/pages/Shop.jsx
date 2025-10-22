@@ -4,12 +4,14 @@ import { useParams, useHistory } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import Logo from "../Logo";
 import ShopSection from "../ShopSection";
-import X from "../assets/work.jpg";
 import FilterBar from "../FilterBar";
+import api from "../api/api"; // Axios instance
+import X from "../assets/work.jpg";
 
 export default function Shop() {
   const { categoryId } = useParams();
-  const history = useHistory(); // ← yönlendirme için
+  const history = useHistory();
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
@@ -19,61 +21,53 @@ export default function Shop() {
 
   const limit = 12;
 
-  // --- API üzerinden ürünleri çek ---
+  // --- API’den ürünleri çekme ---
   const fetchProductsFromAPI = async (page = 1) => {
     setLoading(true);
     try {
-      const params = new URLSearchParams();
-      if (categoryId) params.append("category", categoryId);
-      if (filter) params.append("filter", filter);
-      if (sort) params.append("sort", sort);
-      params.append("page", page);
-      params.append("limit", limit);
+      const params = { page, limit };
+      if (categoryId) params.category = categoryId;
+      if (filter) params.filter = filter;
+      if (sort) params.sort = sort;
 
-      const res = await fetch(
-        `http://localhost:3001/api/products?${params.toString()}`
-      );
+      // Query parametrelerini URL’ye ekle
+      const query = new URLSearchParams(params).toString();
+      const res = await api.get(`/products?${query}`);
+      const data = res.data;
 
-      if (res.ok) {
-        const data = await res.json();
-        setProducts(data.products || []);
-        setTotalPages(data.totalPages || 1);
-        setCurrentPage(page);
-        setLoading(false);
-        return true;
-      }
+      setProducts(data.products || []);
+      setTotalPages(data.totalPages || 1);
+      setCurrentPage(page);
+      return true;
     } catch (err) {
       console.error("API error:", err);
+      return false; // fallback kullanacak
+    } finally {
+      setLoading(false);
     }
-    return false;
   };
 
-  // --- Test ürünleri (fallback) ---
+  // --- Fallback test verisi ---
   const getTestProducts = (page = 1) => {
     let items = Array.from({ length: 36 }, (_, i) => ({
       id: i + 1,
       title: `Graphic Design ${i + 1}`,
-      department: "English Department",
+      department: i % 2 === 0 ? "English Department" : "Art Department",
       originalPrice: 16.48,
-      discountedPrice: 6.48,
+      discountedPrice: 6.48 + (i % 5),
       rating: Math.floor(Math.random() * 5) + 1,
       imageUrl: X,
     }));
 
-    if (categoryId) {
+    if (categoryId)
       items = items.filter((p) => p.department === categoryId);
-    }
-
-    if (filter) {
+    if (filter)
       items = items.filter((p) =>
         p.title.toLowerCase().includes(filter.toLowerCase())
       );
-    }
 
-    if (sort === "price:asc")
-      items.sort((a, b) => a.discountedPrice - b.discountedPrice);
-    if (sort === "price:desc")
-      items.sort((a, b) => b.discountedPrice - a.discountedPrice);
+    if (sort === "price:asc") items.sort((a, b) => a.discountedPrice - b.discountedPrice);
+    if (sort === "price:desc") items.sort((a, b) => b.discountedPrice - a.discountedPrice);
     if (sort === "rating:asc") items.sort((a, b) => a.rating - b.rating);
     if (sort === "rating:desc") items.sort((a, b) => b.rating - a.rating);
 
@@ -95,16 +89,16 @@ export default function Shop() {
     }
   };
 
+  // --- Sayfa veya filtre değiştiğinde ürünleri çek ---
   useEffect(() => {
     fetchProducts(1);
   }, [categoryId, filter, sort]);
 
-  // --- Detail sayfasına yönlendirme ---
   const goToDetail = (id) => {
     history.push(`/detail/${id}`);
   };
 
-  // --- Sayfa numaraları render ---
+  // --- Sayfalama butonları ---
   const renderPageNumbers = () => {
     const pages = [];
     const maxVisible = 5;
@@ -134,11 +128,11 @@ export default function Shop() {
   };
 
   return (
-    <section className="bg-white font-sans py-12 px-4 flex justify-center">
+    <section className="bg-white font-sans py-8 px-4 flex justify-center">
       <div className="max-w-[1115px] w-full">
         <ShopSection />
 
-        <div className="mt-[100px]">
+        <div className="mt-8 mb-4">
           <FilterBar setFilter={setFilter} setSort={setSort} />
         </div>
 
@@ -147,7 +141,7 @@ export default function Shop() {
         ) : products.length === 0 ? (
           <p className="text-center my-4">Ürün bulunamadı.</p>
         ) : (
-          <section className="max-w-[1440px] mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <div
                 key={product.id}
@@ -160,10 +154,8 @@ export default function Shop() {
           </section>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-6 flex justify-center items-center gap-2 flex-wrap">
-            {/* First */}
             <button
               className={`px-3 py-1 border rounded transition-colors ${
                 currentPage === 1
@@ -175,11 +167,7 @@ export default function Shop() {
             >
               First
             </button>
-
-            {/* Sayfa Numaraları */}
             {renderPageNumbers()}
-
-            {/* Next */}
             <button
               className={`px-3 py-1 border rounded transition-colors ${
                 currentPage === totalPages
