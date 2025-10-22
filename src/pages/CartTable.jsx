@@ -220,219 +220,184 @@ export default function CartTable() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto mt-10 p-4">
-      <h1 className="text-2xl font-bold mb-6">Alışveriş Sepeti</h1>
+<div className="max-w-6xl mx-auto mt-10 p-4">
+  <h1 className="text-2xl font-bold mb-6 text-center lg:text-left">Alışveriş Sepeti</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sol kısım: Sepet + Tablar */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Sepet Tablosu */}
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h2 className="text-xl font-bold mb-4">Sepetim</h2>
-            <table className="w-full">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="p-2 text-left">Ürün</th>
-                  <th className="p-2 text-center">Fiyat</th>
-                  <th className="p-2 text-center">Adet</th>
-                  <th className="p-2 text-center">Toplam</th>
-                  <th className="p-2 text-center"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {cart.map((item) => (
-                  <tr key={item.product.id} className="border-b">
-                    <td className="p-2 flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        checked={item.checked}
-                        onChange={() =>
-                          dispatch(toggleChecked(item.product.id))
-                        }
-                        className="h-4 w-4 text-blue-600"
-                      />
-                      <img
-                        src={item.product.image || X}
-                        alt={item.product.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                      <div>
-                        <div className="font-medium">{item.product.name}</div>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
-                            onClick={() =>
-                              dispatch(decreaseCount(item.product.id))
-                            }
-                          >
-                            -
-                          </button>
-                          <span className="px-2 font-medium text-sm">
-                            {item.count}
-                          </span>
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
-                            onClick={() =>
-                              dispatch(increaseCount(item.product.id))
-                            }
-                          >
-                            +
-                          </button>
-                          <button
-                            className="p-1 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center text-sm ml-2"
-                            onClick={() => handleTrashClick(item.product.id)}
-                          >
-                            <TrashIcon />
-                          </button>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-2 text-center">
-                      {item.product.price} TL
-                    </td>
-                    <td className="p-2 text-center font-medium">
-                      {item.count}
-                    </td>
-                    <td className="p-2 text-center font-medium">
-                      {item.count * item.product.price} TL
-                    </td>
-                    <td className="p-2 text-center">
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {/* Sol kısım: Sepet + Tablar */}
+    <div className="lg:col-span-2 space-y-8">
+      {/* Sepet Tablosu */}
+      <div className="bg-white rounded-lg shadow-md p-4 overflow-x-auto">
+        <h2 className="text-xl font-bold mb-4">Sepetim</h2>
+        <table className="w-full min-w-[600px]">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-2 text-left">Ürün</th>
+              <th className="p-2 text-center">Fiyat</th>
+              <th className="p-2 text-center">Adet</th>
+              <th className="p-2 text-center">Toplam</th>
+              <th className="p-2 text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {cart.map((item) => (
+              <tr key={item.product.id} className="border-b">
+                <td className="p-2 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    onChange={() => dispatch(toggleChecked(item.product.id))}
+                    className="h-4 w-4 text-blue-600"
+                  />
+                  <img
+                    src={item.product.image || X}
+                    alt={item.product.name}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                  <div className="flex-1">
+                    <div className="font-medium text-sm sm:text-base">{item.product.name}</div>
+                    <div className="flex items-center space-x-2 mt-2">
                       <button
-                        className="p-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center mx-auto"
+                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+                        onClick={() => dispatch(decreaseCount(item.product.id))}
+                      >
+                        -
+                      </button>
+                      <span className="px-2 font-medium text-sm">{item.count}</span>
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+                        onClick={() => dispatch(increaseCount(item.product.id))}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="p-1 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center text-sm ml-2"
                         onClick={() => handleTrashClick(item.product.id)}
                       >
                         <TrashIcon />
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <div className="text-right text-xl font-semibold mt-4 pt-4 border-t">
-              Toplam: {totalAmount.toFixed(2)} TL
-            </div>
-          </div>
-
-          {/* Tab Butonları */}
-          <div className="flex mb-4 border-b">
-            <button
-              className={`py-3 px-6 font-medium text-lg ${
-                activeTab === "previouslyAdded"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-600"
-              }`}
-              onClick={() => setActiveTab("previouslyAdded")}
-            >
-              Önceden Eklediklerim
-            </button>
-            <button
-              className={`py-3 px-6 font-medium text-lg ${
-                activeTab === "recommended"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-600"
-              }`}
-              onClick={() => setActiveTab("recommended")}
-            >
-              Önerilen Ürünler
-            </button>
-            <button
-              className={`py-3 px-6 font-medium text-lg ${
-                activeTab === "favorites"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-600"
-              }`}
-              onClick={() => setActiveTab("favorites")}
-            >
-              Favoriler
-            </button>
-          </div>
-
-          {/* Ürün Listesi */}
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <div className="space-y-4">
-              {getActiveProducts().map((product) => (
-                <div key={product.id} className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center flex-1">
-                      <input
-                        type="checkbox"
-                        checked={product.checked}
-                        onChange={() =>
-                          handleExternalToggleChecked(product.id)
-                        }
-                        className="h-4 w-4 text-blue-600 mr-3"
-                      />
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-16 h-16 object-cover rounded mr-3"
-                      />
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start mb-1">
-                          <span className="text-sm font-semibold text-gray-700">
-                            {product.store}
-                          </span>
-                          <span className="text-xs text-green-600 font-medium bg-green-100 px-2 py-1 rounded">
-                            {product.shipping}
-                          </span>
-                        </div>
-                        <h3 className="text-md font-medium text-gray-800 line-clamp-2">
-                          {product.name}
-                        </h3>
-
-                        {/* Butonlar */}
-                        <div className="flex items-center space-x-2 mt-2">
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
-                            onClick={() =>
-                              handleExternalDecreaseCount(product.id)
-                            }
-                          >
-                            -
-                          </button>
-                          <span className="px-2 font-medium text-sm">
-                            {product.count}
-                          </span>
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
-                            onClick={() =>
-                              handleExternalIncreaseCount(product.id)
-                            }
-                          >
-                            +
-                          </button>
-                          <button
-                            className="p-1 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center text-sm ml-2"
-                            onClick={() => handleExternalRemove(product.id)}
-                          >
-                            <TrashIcon />
-                          </button>
-                          <button
-                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm ml-2"
-                            onClick={() => handleAddToCart(product)}
-                          >
-                            Sepete Ekle
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="ml-4 flex flex-col items-end">
-                      <span className="text-lg font-bold text-gray-900">
-                        {product.price.toFixed(2)} TL
-                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                </td>
+                <td className="p-2 text-center text-sm sm:text-base">{item.product.price} TL</td>
+                <td className="p-2 text-center font-medium text-sm sm:text-base">{item.count}</td>
+                <td className="p-2 text-center font-medium text-sm sm:text-base">{item.count * item.product.price} TL</td>
+                <td className="p-2 text-center">
+                  <button
+                    className="p-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center mx-auto"
+                    onClick={() => handleTrashClick(item.product.id)}
+                  >
+                    <TrashIcon />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-        {/* Sağ kısım: Sipariş Özeti */}
-        <OrderSummary totalAmount={totalAmount} />
+        <div className="text-right text-xl font-semibold mt-4 pt-4 border-t">
+          Toplam: {totalAmount.toFixed(2)} TL
+        </div>
+      </div>
+
+      {/* Tab Butonları */}
+      <div className="flex flex-wrap mb-4 border-b">
+        <button
+          className={`py-3 px-4 sm:px-6 font-medium text-sm sm:text-lg ${
+            activeTab === "previouslyAdded"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("previouslyAdded")}
+        >
+          Önceden Eklediklerim
+        </button>
+        <button
+          className={`py-3 px-4 sm:px-6 font-medium text-sm sm:text-lg ${
+            activeTab === "recommended"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("recommended")}
+        >
+          Önerilen Ürünler
+        </button>
+        <button
+          className={`py-3 px-4 sm:px-6 font-medium text-sm sm:text-lg ${
+            activeTab === "favorites"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("favorites")}
+        >
+          Favoriler
+        </button>
+      </div>
+
+      {/* Ürün Listesi */}
+      <div className="bg-white rounded-lg shadow-md p-4 space-y-4">
+        {getActiveProducts().map((product) => (
+          <div key={product.id} className="border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
+            <div className="flex items-center flex-1 space-x-3">
+              <input
+                type="checkbox"
+                checked={product.checked}
+                onChange={() => handleExternalToggleChecked(product.id)}
+                className="h-4 w-4 text-blue-600"
+              />
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-16 h-16 object-cover rounded"
+              />
+              <div className="flex-1">
+                <div className="flex justify-between items-start mb-1">
+                  <span className="text-sm font-semibold text-gray-700">{product.store}</span>
+                  <span className="text-xs text-green-600 font-medium bg-green-100 px-2 py-1 rounded">{product.shipping}</span>
+                </div>
+                <h3 className="text-sm sm:text-md font-medium text-gray-800 line-clamp-2">{product.name}</h3>
+                <div className="flex flex-wrap items-center space-x-2 mt-2">
+                  <button
+                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+                    onClick={() => handleExternalDecreaseCount(product.id)}
+                  >
+                    -
+                  </button>
+                  <span className="px-2 font-medium text-sm">{product.count}</span>
+                  <button
+                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+                    onClick={() => handleExternalIncreaseCount(product.id)}
+                  >
+                    +
+                  </button>
+                  <button
+                    className="p-1 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center text-sm"
+                    onClick={() => handleExternalRemove(product.id)}
+                  >
+                    <TrashIcon />
+                  </button>
+                  <button
+                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Sepete Ekle
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="text-lg font-bold text-gray-900 mt-2 sm:mt-0">{product.price.toFixed(2)} TL</div>
+          </div>
+        ))}
       </div>
     </div>
+
+    {/* Sağ kısım: Sipariş Özeti */}
+    <div className="lg:col-span-1">
+      <OrderSummary totalAmount={totalAmount} />
+    </div>
+  </div>
+</div>
+
+ 
   );
 }
