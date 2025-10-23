@@ -22,5 +22,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+axios.get("/api/products?page=1&limit=12")
 
 export default api;

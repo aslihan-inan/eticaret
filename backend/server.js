@@ -16,12 +16,9 @@ app.use(express.json());
 // 🔹 CORS ayarları
 app.use(
   cors({
-    origin: [
-      "https://eticaret-26.vercel.app", // Frontend URL
-      "http://localhost:5173",           // Local frontend testi
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true, // Cookie/session varsa
+    origin: ["http://localhost:5173", "https://eticaret-26.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 
