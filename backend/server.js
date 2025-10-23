@@ -23,7 +23,7 @@ import userRoutes from "./routes/userRoutes.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
-
+app.use("/api/user", userRoutes);
 
 // Server başlat
 const PORT = process.env.PORT || 5000;
