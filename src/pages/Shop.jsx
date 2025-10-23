@@ -81,16 +81,13 @@ const fetchProductsFromAPI = async (page = 1) => {
   };
 
   // --- Ortak fetch fonksiyonu ---
-  async function fetchProducts() {
-  try {
-    const res = await api.get("/products?page=1&limit=12");
-    console.log(res.data);
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-fetchProducts();
+  const fetchProducts = async (page = 1) => {
+    const success = await fetchProductsFromAPI(page);
+    if (!success) {
+      console.log("API başarısız, test verileri yüklendi.");
+      getTestProducts(page);
+    }
+  };
 
   // --- Sayfa veya filtre değiştiğinde ürünleri çek ---
   useEffect(() => {
