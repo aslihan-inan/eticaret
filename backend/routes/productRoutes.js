@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const productsRouter = require("./routes/productRoutes");
-app.use("/api/products", productsRouter);
-
+// ✅ Örnek veri üretimi (şimdilik statik)
 router.get("/", (req, res) => {
   const { page = 1, limit = 12 } = req.query;
 
