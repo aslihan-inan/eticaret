@@ -6,7 +6,7 @@ const BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + "/api",
+baseURL: "https://eticaret-backend.onrender.com/api",
   withCredentials: true, // cookie veya session için
   headers: {
     "Content-Type": "application/json",

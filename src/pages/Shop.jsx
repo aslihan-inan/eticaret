@@ -22,7 +22,7 @@ export default function Shop() {
   const limit = 12;
 
   // --- API’den ürünleri çekme ---
- const fetchProductsFromAPI = async (page = 1) => {
+const fetchProductsFromAPI = async (page = 1) => {
   setLoading(true);
   try {
     const params = { page, limit };
@@ -33,16 +33,20 @@ export default function Shop() {
     const res = await api.get("/products", { params });
     const data = res.data;
 
-    setProducts(data.products || []);
+    // Eğer backend şu formatta dönerse: { products: [...], totalPages: 5 }
+    setProducts(data.products || []); 
     setTotalPages(data.totalPages || 1);
     setCurrentPage(page);
-  } catch (err) {Q
-    console.error("API error:", err);
-    return false; // fallback kullanacak
+  } catch (err) {
+    console.error("API HATASI:", err);
+    // fallback: local test verisi veya boş array
+    setProducts([]); 
+    setTotalPages(1);
   } finally {
     setLoading(false);
   }
 };
+
   // --- Fallback test verisi ---
   const getTestProducts = (page = 1) => {
     let items = Array.from({ length: 36 }, (_, i) => ({
