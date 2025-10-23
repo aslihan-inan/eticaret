@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const productsRouter = require("./routes/products");
+const productsRouter = require("./routes/productRoutes");
 app.use("/api/products", productsRouter);
 
 router.get("/", (req, res) => {
