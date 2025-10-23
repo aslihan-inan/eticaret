@@ -1,5 +1,7 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+
+import productRoutes from "./routes/productRoutes.js";
 
 const app = express();
 
@@ -15,10 +17,9 @@ app.use(
 app.use(express.json());
 
 // ✅ Routes
-const productRoutes = require("./routes/productRoutes");
 app.use("/api/products", productRoutes);
 
-// Test root
+// ✅ Test
 app.get("/", (req, res) => {
   res.send("API is working ✅");
 });

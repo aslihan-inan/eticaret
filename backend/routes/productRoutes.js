@@ -1,7 +1,8 @@
-const express = require("express");
+import express from "express";
+
 const router = express.Router();
 
-// ✅ Örnek veri üretimi (şimdilik statik)
+// ✅ Test verisi
 router.get("/", (req, res) => {
   const { page = 1, limit = 12 } = req.query;
 
@@ -19,4 +20,4 @@ router.get("/", (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;
