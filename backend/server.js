@@ -1,24 +1,29 @@
+// src/api/api.js
+import axios from "axios";
 
-const express = require("express");
-const cors = require("cors");
-const app = express();
+// Ortama göre baseURL
+const BASE_URL =
+  import.meta.env.VITE_API_URL || "https://eticaret-backend.onrender.com/api";
 
-app.use(cors({
-  origin: "https://eticaret-26.vercel.app", 
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-}));
-app.use(express.json());
+const api = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true, // cookie veya session için
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-const userRoutes = require("./routes/users"); // ✅ doğru dosya yolu
-const productRoutes = require("./routes/productRoutes");
+// Global hata yakalama
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (!error.response) {
+      console.error("API HATASI: Sunucuya bağlanılamadı veya network hatası");
+    } else {
+      console.error("API HATASI:", error.response.data || error.message);
+    }
+    return Promise.reject(error);
+  }
+);
 
-app.use("/api/user", userRoutes);
-app.use("/api/products", productRoutes);
-
-app.get("/", (req, res) => res.send("API is running ✅"));
-
-app.use((req, res) => res.status(404).json({ message: "Not Found" }));
-
-const PORT = 5000;
-app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+export default api;
