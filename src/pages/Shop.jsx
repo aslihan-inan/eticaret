@@ -4,9 +4,9 @@ import { useParams, useHistory } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import Logo from "../Logo";
 import ShopSection from "../ShopSection";
-import FilterBar from "../FilterBar";
-import api from "../api/api"; // Axios instance
 import X from "../assets/work.jpg";
+import FilterBar from "../FilterBar";
+import api from "../api/api"; // axios instance
 
 export default function Shop() {
   const { categoryId } = useParams();
@@ -22,39 +22,35 @@ export default function Shop() {
   const limit = 12;
 
   // --- API’den ürünleri çekme ---
-  const fetchProductsFromAPI = async (page = 1) => {
-    setLoading(true);
-    try {
-      const params = { page, limit };
-      if (categoryId) params.category = categoryId;
-      if (filter) params.filter = filter;
-      if (sort) params.sort = sort;
+ const fetchProductsFromAPI = async (page = 1) => {
+  setLoading(true);
+  try {
+    const params = { page, limit };
+    if (categoryId) params.category = categoryId;
+    if (filter) params.filter = filter;
+    if (sort) params.sort = sort;
 
-      // Query parametrelerini URL’ye ekle
-      const query = new URLSearchParams(params).toString();
-      const res = await api.get(`/products?${query}`);
-      const data = res.data;
+    const res = await api.get("/products", { params });
+    const data = res.data;
 
-      setProducts(data.products || []);
-      setTotalPages(data.totalPages || 1);
-      setCurrentPage(page);
-      return true;
-    } catch (err) {
-      console.error("API error:", err);
-      return false; // fallback kullanacak
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    setProducts(data.products || []);
+    setTotalPages(data.totalPages || 1);
+    setCurrentPage(page);
+  } catch (err) {Q
+    console.error("API error:", err);
+    return false; // fallback kullanacak
+  } finally {
+    setLoading(false);
+  }
+};
   // --- Fallback test verisi ---
   const getTestProducts = (page = 1) => {
     let items = Array.from({ length: 36 }, (_, i) => ({
       id: i + 1,
       title: `Graphic Design ${i + 1}`,
-      department: i % 2 === 0 ? "English Department" : "Art Department",
+      department: "English Department",
       originalPrice: 16.48,
-      discountedPrice: 6.48 + (i % 5),
+      discountedPrice: 6.48,
       rating: Math.floor(Math.random() * 5) + 1,
       imageUrl: X,
     }));
