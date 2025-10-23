@@ -36,22 +36,24 @@ export default function CheckoutPage() {
   const [isEditingCard, setIsEditingCard] = useState(false);
 
   // ---------------- VERİ ÇEKME ----------------
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const [cardsRes, addrRes] = await Promise.all([
-          api.get("/user/card"),
-          api.get("/user/address"),
-        ]);
-        setCards(cardsRes.data || []);
-        setAddresses(addrRes.data || []);
-      } catch (err) {
-        console.error("Veri çekerken hata:", err.response?.data || err.message);
-        toast.error("Veriler çekilemedi!");
-      }
-    };
-    fetchAll();
-  }, []);
+useEffect(() => {
+  const fetchAll = async () => {
+    try {
+      const [cardsRes, addrRes] = await Promise.all([
+        api.get("/user/card"),
+        api.get("/user/address"),
+      ]);
+      setCards(Array.isArray(cardsRes.data) ? cardsRes.data : []);
+      setAddresses(Array.isArray(addrRes.data) ? addrRes.data : []);
+    } catch (err) {
+      console.error("Veri çekerken hata:", err.response?.data || err.message);
+      toast.error("Veriler çekilemedi!");
+      setCards([]);
+      setAddresses([]);
+    }
+  };
+  fetchAll();
+}, []);
 
   // ---------------- ADRES İŞLEMLERİ ----------------
   const handleAddressChange = (e) =>
