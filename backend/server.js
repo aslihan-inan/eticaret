@@ -4,7 +4,9 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://eticaret-nine.vercel.app'],
+  origin: ['http://localhost:5173', 
+    "https://eticaret-26.vercel.app"
+  ],
   credentials: true
 }));
 app.use(express.json());
