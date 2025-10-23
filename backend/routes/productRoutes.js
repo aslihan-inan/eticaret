@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-// GET /api/products?page=1&limit=12
+const productsRouter = require("./routes/products");
+app.use("/api/products", productsRouter);
+
 router.get("/", (req, res) => {
   const { page = 1, limit = 12 } = req.query;
 
