@@ -150,19 +150,14 @@ export default function Shop() {
     setError(null);
     
     try {
-      const result = await fetchProductsFromAPI(page, limit);
-      
-      if (result.success) {
-        // API'den gelen veriyi kullan
-        setProducts(result.data.products || result.data);
-        setTotalPages(result.data.totalPages || 1);
-        setCurrentPage(result.data.currentPage || page);
-      } else {
-        // Mock data kullan
-        setProducts(result.data.products);
-        setTotalPages(result.data.totalPages);
-        setCurrentPage(result.data.currentPage);
-      }
+    const result = await fetchProductsFromAPI(page, limit);
+if (result.success) {
+  setProducts(result.data.products);
+} else {
+  setProducts(result.data.products);
+  setError(result.errorMessage); // React state burada kullanılabilir
+}
+
     } catch (err) {
       console.error('Fetch hatası:', err);
       // Test verilerine fallback
