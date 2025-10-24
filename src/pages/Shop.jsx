@@ -6,7 +6,7 @@ import Logo from "../Logo";
 import ShopSection from "../ShopSection";
 import X from "../assets/work.jpg";
 import FilterBar from "../FilterBar";
-import api from "../api/api"; // axios instance
+import api from "../utils/api"; // axios instance
 
 export default function Shop() {
   const { categoryId } = useParams();
