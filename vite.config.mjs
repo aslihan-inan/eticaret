@@ -1,18 +1,18 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+// vite.config.mjs
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  plugins: [react()],
   server: {
+    port: 5173,
     proxy: {
-      '/api': 'http://localhost:5000',
-      target: "https://eticaret-backend.onrender.com",
+      '/api': {
+        target: 'https://eticaret-backend.onrender.com',
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
+      }
     }
-  },
-  plugins: [react()],
-  optimizeDeps: {
-    include: ['redux-thunk'], 
-  },
-});
-
+  }
+})

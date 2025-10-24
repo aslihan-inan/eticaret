@@ -1,6 +1,6 @@
 // src/pages/Shop.jsx
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import Logo from "../Logo";
 import ShopSection from "../ShopSection";
@@ -10,62 +10,126 @@ import api from "../api/api"; // axios instance
 
 export default function Shop() {
   const { categoryId } = useParams();
-  const history = useHistory();
-
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState(null);
 
   const limit = 12;
 
-  // --- API’den ürünleri çekme ---
-const fetchProductsFromAPI = async (page = 1) => {
-  setLoading(true);
-  try {
-    const params = { page, limit };
-    if (categoryId) params.category = categoryId;
-    if (filter) params.filter = filter;
-    if (sort) params.sort = sort;
+  // --- API'den ürünleri çekme ---
+  const fetchProductsFromAPI = async (page = 1, limit = 12) => {
+    try {
+      const response = await api.get(`/products`, {
+        params: { page, limit }
+      });
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      console.error('API HATASI:', error);
+      setError('Sunucuya bağlanılamadı. Demo veriler gösteriliyor.');
+      return {
+        success: false,
+        data: getMockProducts(page, limit)
+      };
+    }
+  };
 
-    const res = await api.get("/products", { params });
-    const data = res.data;
+  // --- Mock data fonksiyonu ---
+  const getMockProducts = (page, limit) => {
+    const mockProducts = [
+      { 
+        id: 1, 
+        name: "Test Ürün 1", 
+        price: 100, 
+        image: "/images/placeholder.jpg",
+        title: "Graphic Design 1",
+        department: "English Department",
+        originalPrice: 16.48,
+        discountedPrice: 6.48,
+        rating: 4,
+        imageUrl: X
+      },
+      { 
+        id: 2, 
+        name: "Test Ürün 2", 
+        price: 200, 
+        image: "/images/placeholder.jpg",
+        title: "Graphic Design 2",
+        department: "Design Department", 
 
-    // Eğer backend şu formatta dönerse: { products: [...], totalPages: 5 }
-    setProducts(data.products || []); 
-    setTotalPages(data.totalPages || 1);
-    setCurrentPage(page);
-  } catch (err) {
-    console.error("API HATASI:", err);
-    // fallback: local test verisi veya boş array
-    setProducts([]); 
-    setTotalPages(1);
-  } finally {
-    setLoading(false);
-  }
-};
+        originalPrice: 24.99,
+        discountedPrice: 12.99,
+        rating: 5,
+        imageUrl: X
+      },
+      { 
+        id: 3, 
+        name: "Test Ürün 3", 
+        price: 150, 
+        image: "/images/placeholder.jpg",
+        title: "Web Design Kit",
+        department: "English Department",
+        originalPrice: 32.99,
+        discountedPrice: 19.99,
+        rating: 3,
+        imageUrl: X
+      },
+      { 
+        id: 4, 
+        name: "Test Ürün 4", 
+        price: 75, 
+        image: "/images/placeholder.jpg",
+        title: "Marketing Materials",
+        department: "Marketing Department",
+        originalPrice: 18.50,
+        discountedPrice: 9.99,
+        rating: 4,
+        imageUrl: X
+      }
+    ];
+    
+    return {
+      products: mockProducts,
+      totalPages: 1,
+      currentPage: page
+    };
+  };
 
   // --- Fallback test verisi ---
   const getTestProducts = (page = 1) => {
     let items = Array.from({ length: 36 }, (_, i) => ({
       id: i + 1,
       title: `Graphic Design ${i + 1}`,
-      department: "English Department",
-      originalPrice: 16.48,
-      discountedPrice: 6.48,
+      department: i % 3 === 0 ? "English Department" : i % 3 === 1 ? "Design Department" : "Marketing Department",
+      originalPrice: (Math.random() * 50 + 10).toFixed(2),
+      discountedPrice: (Math.random() * 30 + 5).toFixed(2),
       rating: Math.floor(Math.random() * 5) + 1,
       imageUrl: X,
+      name: `Product ${i + 1}`,
+      price: (Math.random() * 200 + 50)
     }));
 
-    if (categoryId)
-      items = items.filter((p) => p.department === categoryId);
-    if (filter)
-      items = items.filter((p) =>
-        p.title.toLowerCase().includes(filter.toLowerCase())
-      );
+    // Kategori filtreleme
+    if (categoryId) {
+      items = items.filter((p) => p.department.toLowerCase().includes(categoryId.toLowerCase()));
+    }
 
+    // Arama filtreleme
+    if (filter) {
+      items = items.filter((p) =>
+        p.title.toLowerCase().includes(filter.toLowerCase()) ||
+        p.department.toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+
+    // Sıralama
     if (sort === "price:asc") items.sort((a, b) => a.discountedPrice - b.discountedPrice);
     if (sort === "price:desc") items.sort((a, b) => b.discountedPrice - a.discountedPrice);
     if (sort === "rating:asc") items.sort((a, b) => a.rating - b.rating);
@@ -82,10 +146,29 @@ const fetchProductsFromAPI = async (page = 1) => {
 
   // --- Ortak fetch fonksiyonu ---
   const fetchProducts = async (page = 1) => {
-    const success = await fetchProductsFromAPI(page);
-    if (!success) {
-      console.log("API başarısız, test verileri yüklendi.");
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const result = await fetchProductsFromAPI(page, limit);
+      
+      if (result.success) {
+        // API'den gelen veriyi kullan
+        setProducts(result.data.products || result.data);
+        setTotalPages(result.data.totalPages || 1);
+        setCurrentPage(result.data.currentPage || page);
+      } else {
+        // Mock data kullan
+        setProducts(result.data.products);
+        setTotalPages(result.data.totalPages);
+        setCurrentPage(result.data.currentPage);
+      }
+    } catch (err) {
+      console.error('Fetch hatası:', err);
+      // Test verilerine fallback
       getTestProducts(page);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,8 +177,15 @@ const fetchProductsFromAPI = async (page = 1) => {
     fetchProducts(1);
   }, [categoryId, filter, sort]);
 
+  // --- Sayfa değişikliğinde ---
+  useEffect(() => {
+    if (currentPage > 1) {
+      fetchProducts(currentPage);
+    }
+  }, [currentPage]);
+
   const goToDetail = (id) => {
-    history.push(`/detail/${id}`);
+    navigate(`/detail/${id}`);
   };
 
   // --- Sayfalama butonları ---
@@ -118,7 +208,7 @@ const fetchProductsFromAPI = async (page = 1) => {
               ? "bg-blue-500 text-white border-blue-500"
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
-          onClick={() => fetchProducts(i)}
+          onClick={() => setCurrentPage(i)}
         >
           {i}
         </button>
@@ -136,50 +226,88 @@ const fetchProductsFromAPI = async (page = 1) => {
           <FilterBar setFilter={setFilter} setSort={setSort} />
         </div>
 
-        {loading ? (
-          <p className="text-center my-4">Yükleniyor...</p>
-        ) : products.length === 0 ? (
-          <p className="text-center my-4">Ürün bulunamadı.</p>
-        ) : (
-          <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                onClick={() => goToDetail(product.id)}
-                className="cursor-pointer"
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </section>
+        {error && (
+          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
         )}
 
-        {totalPages > 1 && (
-          <div className="mt-6 flex justify-center items-center gap-2 flex-wrap">
-            <button
-              className={`px-3 py-1 border rounded transition-colors ${
-                currentPage === 1
-                  ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              }`}
-              onClick={() => fetchProducts(1)}
-              disabled={currentPage === 1}
-            >
-              First
-            </button>
-            {renderPageNumbers()}
-            <button
-              className={`px-3 py-1 border rounded transition-colors ${
-                currentPage === totalPages
-                  ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              }`}
-              onClick={() => fetchProducts(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
+        {loading ? (
+          <div className="text-center my-8">
+            <p className="text-lg">Yükleniyor...</p>
           </div>
+        ) : products.length === 0 ? (
+          <div className="text-center my-8">
+            <p className="text-lg text-gray-600">Bu kriterlere uygun ürün bulunamadı.</p>
+          </div>
+        ) : (
+          <>
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  onClick={() => goToDetail(product.id)}
+                  className="cursor-pointer transform hover:scale-105 transition-transform duration-200"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </section>
+
+            {totalPages > 1 && (
+              <div className="mt-8 flex justify-center items-center gap-2 flex-wrap">
+                <button
+                  className={`px-3 py-1 border rounded transition-colors ${
+                    currentPage === 1
+                      ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                >
+                  İlk
+                </button>
+                
+                <button
+                  className={`px-3 py-1 border rounded transition-colors ${
+                    currentPage === 1
+                      ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Önceki
+                </button>
+
+                {renderPageNumbers()}
+
+                <button
+                  className={`px-3 py-1 border rounded transition-colors ${
+                    currentPage === totalPages
+                      ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Sonraki
+                </button>
+
+                <button
+                  className={`px-3 py-1 border rounded transition-colors ${
+                    currentPage === totalPages
+                      ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                >
+                  Son
+                </button>
+              </div>
+            )}
+          </>
         )}
 
         <Logo />

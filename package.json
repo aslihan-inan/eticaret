@@ -1,10 +1,10 @@
 {
-  "name": "yeniyeni",
+  "name": "eticaret",
   "version": "1.0.0",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -42,6 +42,9 @@
     "tailwindcss": "^3.4.17",
     "vite": "^7.1.5"
   },
+  
+  "type": "module",
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aslihan-inan/eticaret.git"

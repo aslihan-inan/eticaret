@@ -1,27 +1,35 @@
-// src/api/api.js
-import axios from "axios";
+import axios from 'axios';
 
-// Ortama göre baseURL (Vercel frontend ile backend URL’si)
-const BASE_URL = import.meta.env.VITE_API_URL || "https://eticaret-backend.onrender.com/api";
+// DEV veya PROD fark etmez, artık Vercel backend ile aynı domain’de
+const baseURL = '/api';
 
 const api = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true, // cookie/session kullanıyorsan
-  headers: { "Content-Type": "application/json" },
+  baseURL,
+  timeout: 10000,
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// Global hata yakalama
-api.interceptors.response.use(
-  response => response,
-  error => {
-    if (!error.response) {
-      console.error("API HATASI: Sunucuya bağlanılamadı veya network hatası");
-    } else {
-      console.error("API HATASI:", error.response.data || error.message);
-    }
-    return Promise.reject(error);
+export const fetchProducts = async (page = 1, limit = 12) => {
+  try {
+    const response = await api.get('/products', {
+      params: { page, limit }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('API Hatası:', error);
+    return getMockProducts(page, limit);
   }
-);
-axios.get("/api/products?page=1&limit=12")
+};
+
+// Mock data fallback
+const getMockProducts = (page = 1, limit = 12) => ({
+  products: [
+    { id: 1, name: "Demo Ürün 1", price: 99.99, image: "/images/placeholder.jpg", category: "elektronik" },
+    { id: 2, name: "Demo Ürün 2", price: 149.99, image: "/images/placeholder.jpg", category: "giyim" },
+    { id: 3, name: "Demo Ürün 3", price: 79.99, image: "/images/placeholder.jpg", category: "ev" },
+  ],
+  totalPages: 1,
+  currentPage: page,
+});
 
 export default api;
