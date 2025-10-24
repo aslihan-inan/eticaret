@@ -7,10 +7,11 @@ const BASE_URL =
   import.meta.env.VITE_BACKEND_URL || '/api'; // .env’de VITE_BACKEND_URL tanımlıysa kullan, yoksa proxy
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: 'https://eticaret-backend.onrender.com/api', // canlı backend URL
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
+
 
 // Ürünleri çekme fonksiyonu
 export const fetchProducts = async (page = 1, limit = 12) => {
