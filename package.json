@@ -43,7 +43,6 @@
     "vite": "^7.1.5"
   },
   
-  "type": "module",
 
   "repository": {
     "type": "git",
