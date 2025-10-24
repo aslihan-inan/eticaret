@@ -7,7 +7,7 @@ const BASE_URL =
   import.meta.env.VITE_BACKEND_URL || '/api'; // .env’de VITE_BACKEND_URL tanımlıysa kullan, yoksa proxy
 
 const api = axios.create({
-  baseURL: "https://eticaret-1-h4gn.onrender.com", // canlı backend URL
+  baseURL: "https://eticaret-1-h4gn.onrender.com/api/products?page=1&limit=12", // canlı backend URL
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });

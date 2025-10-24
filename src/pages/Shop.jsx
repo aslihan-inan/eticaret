@@ -22,7 +22,7 @@ export default function Shop() {
   const limit = 12;
 
   // --- API'den ürünleri çekme ---
-  const response = await axios.get('https://eticaret-1-h4gn.onrender.com');
+  const response = await axios.get('https://eticaret-1-h4gn.onrender.com/api/products?page=1&limit=12');
 
   const fetchProductsFromAPI = async (page = 1, limit = 12) => {
     try {
