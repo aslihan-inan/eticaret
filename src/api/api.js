@@ -1,19 +1,14 @@
 import axios from 'axios';
 
-// DEV veya PROD fark etmez, artık Vercel backend ile aynı domain’de
-const baseURL = '/api';
-
 const api = axios.create({
-  baseURL,
+  baseURL: '/api',          // Artık Vercel backend’e gidiyor
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
 
 export const fetchProducts = async (page = 1, limit = 12) => {
   try {
-    const response = await api.get('/products', {
-      params: { page, limit }
-    });
+    const response = await api.get('/products', { params: { page, limit } });
     return response.data;
   } catch (error) {
     console.error('API Hatası:', error);
@@ -21,7 +16,6 @@ export const fetchProducts = async (page = 1, limit = 12) => {
   }
 };
 
-// Mock data fallback
 const getMockProducts = (page = 1, limit = 12) => ({
   products: [
     { id: 1, name: "Demo Ürün 1", price: 99.99, image: "/images/placeholder.jpg", category: "elektronik" },
