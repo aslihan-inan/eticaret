@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
-import productRoutes from "../eticaret-backend/routes/productRoutes.js";
+import productRoutes from "../eticaret-backend/routes/productRoutes.js"; // kendi route dosyanın yolu
 
 const app = express();
 
+// CORS
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://eticaret-26.vercel.app"],
@@ -11,8 +12,9 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use("/api/products", productRoutes);
 
-// ✅ Vercel için handler export
+// Vercel için export
 export default app;
