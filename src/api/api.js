@@ -1,11 +1,12 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || "/api";
-
+// Ortama göre otomatik backend URL'i seçer (.env dosyalarından)
 const api = axios.create({
-  baseURL: "https://eticaret-backend.onrender.com/api",
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   timeout: 10000,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export default api;
