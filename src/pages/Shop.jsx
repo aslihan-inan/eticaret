@@ -58,7 +58,7 @@ export default function Shop() {
       }
     } catch (err) {
       console.warn("API HATASI:", err.message);
-      setError("Sunucuya bağlanılamadı. Demo veriler gösteriliyor.");
+      setError("Demo veriler gösteriliyor.");
       const mock = getMockProducts(page, limit);
       setProducts(mock.products);
       setTotalPages(mock.totalPages);
