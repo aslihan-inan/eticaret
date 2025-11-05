@@ -1,17 +1,18 @@
-// api/products.js
-export default function handler(req, res) {
-  const { page = 1, limit = 12 } = req.query;
+import express from "express";
+import cors from "cors";
+import productRoutes from "../eticaret-backend/routes/productRoutes.js";
 
-  const products = Array.from({ length: limit }, (_, i) => ({
-    id: (page - 1) * limit + i + 1,
-    title: `Ürün ${(page - 1) * limit + i + 1}`,
-    price: Math.floor(Math.random() * 100) + 1,
-    image: "https://via.placeholder.com/150",
-  }));
+const app = express();
 
-  res.status(200).json({
-    page: Number(page),
-    totalPages: 5,
-    products,
-  });
-}
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://eticaret-26.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+app.use(express.json());
+app.use("/api/products", productRoutes);
+
+// ✅ Vercel için handler export
+export default app;
